@@ -82,7 +82,7 @@
     KeyWordModel *keyword = [[KeyWordModel alloc]init];
     NSString *width = [NSString stringWithFormat:@"%f",image.size.width];
     NSString *height = [NSString stringWithFormat:@"%f",image.size.height];
-    keyword.props = @{@"type":@"3",@"src":@"分享_u589.png",@"width":width,@"height":height};
+    keyword.props = @{@"type":@"3",@"src":imageNamed,@"width":width,@"height":height};
     NSAttributedString *atr = [self insertKeyWord:keyword atRange:range];
     NSMutableAttributedString *newstr = [[NSMutableAttributedString alloc]initWithAttributedString:self.textView.attributedText];
     [newstr replaceCharactersInRange:range withAttributedString:atr];

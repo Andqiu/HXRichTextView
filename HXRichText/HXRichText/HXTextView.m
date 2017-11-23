@@ -46,12 +46,12 @@
 -(NSString *)getCurrentRichText{
     return [_textManger getRichText];;
 }
--(void)insertImage:(UIImage *)image{
+-(void)insertImage:(NSString *)imageNamed{
     
-    [_textManger insertImage:@"分享_u589.png"];
+    [_textManger insertImage:imageNamed];
 }
 -(void)insertUser:(NSString *)name{
-    [_textManger insertUser:@"厚行投资"];
+    [_textManger insertUser:name];
 }
 #pragma mark - delegate
 

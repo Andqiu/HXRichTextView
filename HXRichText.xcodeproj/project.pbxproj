@@ -18,7 +18,6 @@
 		E97DB23C1FBC4B3900CB05EE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E97DB23A1FBC4B3900CB05EE /* LaunchScreen.storyboard */; };
 		E97DB23F1FBC4B3900CB05EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E97DB23E1FBC4B3900CB05EE /* main.m */; };
 		E97DB2481FBC4C1D00CB05EE /* HXRichTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E97DB2471FBC4C1D00CB05EE /* HXRichTextManager.m */; };
-		E98385441FBD264F00A2851E /* 分享_u589.png in Resources */ = {isa = PBXBuildFile; fileRef = E98385431FBD236E00A2851E /* 分享_u589.png */; };
 		E9A183D71FC660EA00DA29C6 /* RichTextStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = E9A183D61FC660EA00DA29C6 /* RichTextStyle.m */; };
 /* End PBXBuildFile section */
 
@@ -43,7 +42,6 @@
 		E97DB23E1FBC4B3900CB05EE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E97DB2461FBC4C1D00CB05EE /* HXRichTextManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXRichTextManager.h; sourceTree = "<group>"; };
 		E97DB2471FBC4C1D00CB05EE /* HXRichTextManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HXRichTextManager.m; sourceTree = "<group>"; };
-		E98385431FBD236E00A2851E /* 分享_u589.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "分享_u589.png"; sourceTree = "<group>"; };
 		E9A183D51FC660EA00DA29C6 /* RichTextStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RichTextStyle.h; sourceTree = "<group>"; };
 		E9A183D61FC660EA00DA29C6 /* RichTextStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RichTextStyle.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,7 +85,6 @@
 				E97DB2381FBC4B3900CB05EE /* Assets.xcassets */,
 				E97DB23A1FBC4B3900CB05EE /* LaunchScreen.storyboard */,
 				E97DB23D1FBC4B3900CB05EE /* Info.plist */,
-				E98385431FBD236E00A2851E /* 分享_u589.png */,
 				E97DB23E1FBC4B3900CB05EE /* main.m */,
 			);
 			path = HXRichText;
@@ -171,7 +168,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E97DB23C1FBC4B3900CB05EE /* LaunchScreen.storyboard in Resources */,
-				E98385441FBD264F00A2851E /* 分享_u589.png in Resources */,
 				E97DB2391FBC4B3900CB05EE /* Assets.xcassets in Resources */,
 				E97DB2371FBC4B3900CB05EE /* Main.storyboard in Resources */,
 			);

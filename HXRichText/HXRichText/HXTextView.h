@@ -20,6 +20,6 @@
  */
 -(void)setRichText:(NSString *)richText;
 
--(void)insertImage:(UIImage *)image;
+-(void)insertImage:(NSString *)imageNamed;
 -(void)insertUser:(NSString *)name;
 @end
