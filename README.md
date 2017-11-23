@@ -1,5 +1,5 @@
 # HXRichTextView
-应项目需求，开发了一款简单的富文本编辑器，支持url，@，图片的编辑功能，（图片占据一行，类似于新闻类的布局）。
+应项目需求，开发了一款简单的UITextView富文本编辑器，支持url，@，图片的编辑功能，（图片占据一行，类似于新闻类的布局）。
 ### demo演示图片
 ![](https://github.com/Andqiu/HXRichTextView/blob/master/HXRichText/demo.gif)
 
