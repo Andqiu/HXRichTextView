@@ -44,6 +44,7 @@
 		E97DB2471FBC4C1D00CB05EE /* HXRichTextManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HXRichTextManager.m; sourceTree = "<group>"; };
 		E9A183D51FC660EA00DA29C6 /* RichTextStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RichTextStyle.h; sourceTree = "<group>"; };
 		E9A183D61FC660EA00DA29C6 /* RichTextStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RichTextStyle.m; sourceTree = "<group>"; };
+		E9A183D81FC66D0300DA29C6 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +84,7 @@
 				E97DB2331FBC4B3900CB05EE /* ViewController.m */,
 				E97DB2351FBC4B3900CB05EE /* Main.storyboard */,
 				E97DB2381FBC4B3900CB05EE /* Assets.xcassets */,
+				E9A183D81FC66D0300DA29C6 /* demo.gif */,
 				E97DB23A1FBC4B3900CB05EE /* LaunchScreen.storyboard */,
 				E97DB23D1FBC4B3900CB05EE /* Info.plist */,
 				E97DB23E1FBC4B3900CB05EE /* main.m */,

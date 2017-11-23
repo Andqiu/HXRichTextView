@@ -32,14 +32,14 @@ static NSString *richString = @"不同领域、不同层次的人，<hxlink type
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(0, 600, 70, 50);
-    [btn setTitle:@"添加图片" forState:UIControlStateNormal];
+    [btn setTitle:@"+图片" forState:UIControlStateNormal];
     btn.backgroundColor = [UIColor redColor];
     [btn addTarget:self action:@selector(addImage) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
     
     btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(80, 600, 70, 50);
-    [btn setTitle:@"添加用户/链接" forState:UIControlStateNormal];
+    [btn setTitle:@"+链接" forState:UIControlStateNormal];
     btn.backgroundColor = [UIColor redColor];
     [btn addTarget:self action:@selector(addLink) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
