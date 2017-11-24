@@ -76,16 +76,56 @@
 }
 
 #pragma mark - 插入
+-(void)insertKeyword:(KeyWordModel *)keyword{
+
+    if (keyword.props[@"type"] == nil) {
+        return;
+    }
+    NSInteger keyword_type = [keyword.props[@"type"] integerValue];
+    
+    // 1、获取插入的位置
+    NSRange range = self.textView.selectedRange;
+    
+    // 2、获取渲染关键字富文本
+    NSAttributedString *atr = [self insertKeyWord:keyword atRange:range];
+    
+    // 3、将富文本插入到当前位置中
+    NSMutableAttributedString *newstr = [[NSMutableAttributedString alloc]initWithAttributedString:self.textView.attributedText];
+    [newstr replaceCharactersInRange:range withAttributedString:atr];
+    
+    // 4、更新textView文本
+    self.textView.attributedText = newstr;
+    
+    // 5、更新插入位置
+    [self setReplaceString:(keyword_type != KeywordTypeImage)?keyword.content:@"" replaceRange:range];
+    
+    // 6、更新已经存在的关键字位置
+    [self updateKeyRangsWithOffSet:(keyword_type != KeywordTypeImage)?keyword.content.length:1];
+    
+    // 7、将即将插入的关键放入关键字容器中
+    [_keyWords addObject:keyword];
+    
+    // 10、重新刷新关键字样式
+    [self updateTextViewStyle];
+    
+    // 11、更新光标位置
+    self.textView.selectedRange = NSMakeRange(range.location + keyword.content.length, 0);
+    [self.textView scrollRangeToVisible:self.textView.selectedRange];
+}
+
 -(void)insertImage:(NSString *)imageNamed{
+    
     UIImage *image = [UIImage imageNamed:imageNamed];
     NSRange range = self.textView.selectedRange;
     KeyWordModel *keyword = [[KeyWordModel alloc]init];
     NSString *width = [NSString stringWithFormat:@"%f",image.size.width];
     NSString *height = [NSString stringWithFormat:@"%f",image.size.height];
     keyword.props = @{@"type":@"3",@"src":imageNamed,@"width":width,@"height":height};
+    
     NSAttributedString *atr = [self insertKeyWord:keyword atRange:range];
     NSMutableAttributedString *newstr = [[NSMutableAttributedString alloc]initWithAttributedString:self.textView.attributedText];
     [newstr replaceCharactersInRange:range withAttributedString:atr];
+    
     self.textView.attributedText = newstr;
     // 6、更新插入位置
     [self setReplaceString:@"" replaceRange:range];
@@ -104,7 +144,7 @@
     [self.textView scrollRangeToVisible:self.textView.selectedRange];
 }
 
--(void)insertUser:(NSString *)userNamed{
+-(void)insertUser:(NSString *)userNamed withProps:(NSDictionary *)dic{
     
     // 1、获取插入的位置
     NSRange range = self.textView.selectedRange;

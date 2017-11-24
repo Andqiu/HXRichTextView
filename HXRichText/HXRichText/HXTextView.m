@@ -7,19 +7,21 @@
 //
 
 #import "HXTextView.h"
-#import "HXRichTextManager.h"
+#import "KeyBoardComponent.h"
+#import "RichToolView.h"
 
-@interface HXTextView()<UITextViewDelegate>
+@interface HXTextView()<UITextViewDelegate,keyBoardComponentDelegate>
 @end
 
 @implementation HXTextView{
     
-    HXRichTextManager *_textManger;
     
     NSString *_latestString;
     NSString *_replaceString;
     NSRange _replaceRange;
     NSRange _selectedRange;
+    
+    KeyBoardComponent *_keyboardComponent;
 }
 
 -(instancetype)initWithFrame:(CGRect)frame{
@@ -28,6 +30,9 @@
         self.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5);
         self.clipsToBounds = YES;
         self.delegate = self;
+        _keyboardComponent = [[KeyBoardComponent alloc]init];
+        _keyboardComponent.delegate = self;
+        [_keyboardComponent registComponent];
     }
     return self;
 }
@@ -40,7 +45,30 @@
     _latestString = self.text;
 }
 
-
+-(UIView *)KeyBoardComponentTopView{
+    RichToolView *v = [[NSBundle mainBundle] loadNibNamed:@"RichToolView" owner:self options:nil].firstObject;
+    __weak typeof(self)wself = self;
+    [v setClickBlock:^(NSInteger index) {
+        switch (index) {
+            case 0:
+                [wself insertUser:@"大圣偏头痛"];
+                break;
+            case 1:
+                [wself insertImage:@"test.jpg"];
+                break;
+            case 2:
+                [wself insertUser:@"#厚行资产-金股成长5号（第一期）#"];
+                break;
+                
+            default:
+                break;
+        }
+    }];
+    return v;
+}
+-(UIView *)KeyBoardComponentRigsterView:(KeyBoardComponent *)keyBoardComponent{
+    return self;
+}
 
 #pragma mark - public
 -(NSString *)getCurrentRichText{
@@ -48,10 +76,15 @@
 }
 -(void)insertImage:(NSString *)imageNamed{
     
-    [_textManger insertImage:imageNamed];
+    KeyWordModel *keyword = [[KeyWordModel alloc]init];
+    keyword.props = @{@"src":imageNamed,@"type":@(KeywordTypeImage),@"width":@(512),@"height":@(384)};
+    [_textManger insertKeyword:keyword];
 }
--(void)insertUser:(NSString *)name{
-    [_textManger insertUser:name];
+-(void)insertUser:(NSString *)name {       
+    KeyWordModel *keyword = [[KeyWordModel alloc]init];
+    keyword.content = [NSString stringWithFormat:@"@%@",name];
+    keyword.props = @{@"uid":@(123),@"type":@(KeywordTypeUser)};
+    [_textManger insertKeyword:keyword];
 }
 #pragma mark - delegate
 

@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HXRichTextManager.h"
 
 @interface HXTextView : UITextView
+@property(nonatomic,strong) HXRichTextManager *textManger;
 
 
 -(NSString *)getCurrentRichText;

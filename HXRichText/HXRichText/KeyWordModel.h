@@ -7,6 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#define LINK_TAG @"HX_LINK"
+#define IMG_TAG @"HX_IMG"
+
+typedef  NS_ENUM(NSInteger,KeywordType){
+    KeywordTypeLink = 0,
+    KeywordTypeUser = 1,
+    KeywordTypeProduct = 2,
+    KeywordTypeImage = 3,
+};
 
 /**
  关键字模型
@@ -17,10 +26,20 @@
  临时range
  */
 @property(nonatomic,assign)NSRange tempRange;
-//@property(nonatomic,assign)NSRange newrange;
 
+/**
+ 标签属性
+ */
 @property(nonatomic,strong)NSDictionary *props;
+
+/**
+ 标签内容
+ */
 @property(nonatomic)NSString * content;
+
+/**
+ 标签字符串
+ */
 @property(nonatomic)NSString * originString;
 
 @end

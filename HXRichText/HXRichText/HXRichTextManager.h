@@ -38,8 +38,7 @@
  */
 -(NSAttributedString *)insertKeyWord:(KeyWordModel *)keyWord atRange:(NSRange)range;
 
--(void)insertImage:(NSString *)imageNamed;
--(void)insertUser:(NSString *)userNamed;
+-(void)insertKeyword:(KeyWordModel *)keyword;
 
 -(void)setReplaceString:(NSString *)text replaceRange:(NSRange)range;
 -(void)update;

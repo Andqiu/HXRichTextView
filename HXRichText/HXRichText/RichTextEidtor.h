@@ -9,10 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "KeyWordModel.h"
 
-#define HXRICH_LINK_TEXT(HREF,C) [NSString stringWithFormat:@"<hxlink type='1' href='%@' >%@</hxlink>",HREF,C]
-
-#define HXRICH_IMG_TEXT(SCR,W,H) [NSString stringWithFormat:@"<hximg type='3' src='%@' width='%f' height='%f'></hximg>",SCR,W,H]
-
 @interface RichTextEidtor : NSObject
 
 /**

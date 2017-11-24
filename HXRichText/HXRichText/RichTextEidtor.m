@@ -16,15 +16,6 @@
     return @"";
 }
 
--(NSString *)insertImageNamed:(NSString *)imageNamed size:(CGSize)size atRange:(NSRange)range richText:(NSString *)richText{
-    
-    CGFloat width = size.width;
-    CGFloat height = size.height;
-    NSString *imgStr = HXRICH_IMG_TEXT(imageNamed, width, height);
-    NSString *str = [richText stringByReplacingCharactersInRange:range withString:imgStr];
-    return str;
-}
-
 -(NSAttributedString *)getImage:(NSString *)imageNamed
                           width:(CGFloat)width
                          height:(CGFloat)height
@@ -51,35 +42,6 @@
     return textAttachmentString;
 }
 
--(void)insertImageNamed:(NSString *)imageNamed
-                   size:(CGSize)size
-               maxWidth:(CGFloat)maxWidth
-                atRange:(NSRange)range
-               richText:(NSString *)richText
-                  block:(void(^)(NSString *newrichText,NSAttributedString *imgAttributed))block{
-    CGFloat width = size.width;
-    CGFloat height = size.height;
-    NSString *imgKey = HXRICH_IMG_TEXT(imageNamed, width, height);
-    NSString *str = [richText stringByReplacingCharactersInRange:range withString:imgKey];
-    NSAttributedString *attributed = [self getImage:imageNamed width:width height:height maxWidth:maxWidth];
-    if (block) {
-        block(str,attributed);
-    }
-}
-
--(void)insetLinkWithContent:(NSString *)content
-                       href:(NSString *)href
-                    atRange:(NSRange)range
-                   richText:(NSString *)richText
-                      block:(void(^)(NSString *newrichText,NSAttributedString *linkAttributed))block{
-    NSString *linkKey = HXRICH_LINK_TEXT(href, content);
-    NSString *str = [richText stringByReplacingCharactersInRange:range withString:linkKey];
-    NSAttributedString *attributed = [self getLinkTextAttributedStringWithString:content];
-    if (block) {
-        block(str,attributed);
-    }
-}
-
 -(NSAttributedString *)getLinkTextAttributedStringWithString:(NSString *)str{
     
     NSAttributedString *attributes = [[NSAttributedString alloc]initWithString:str attributes:[RichTextStyle getLinkTextAttributed]];
@@ -92,7 +54,7 @@
                block:(void(^)(NSString *newrichText,NSAttributedString *attributed))block{
     NSInteger type = [keyWord.props[@"type"] integerValue];
     NSString *keywordDes =[self keyWordDescription:keyWord];
-    if (type == 3) {
+    if (type == KeywordTypeImage) {
         NSString *src = keyWord.props[@"src"];
         CGFloat width = [keyWord.props[@"width"] floatValue];
         CGFloat height = [keyWord.props[@"height"] floatValue];
@@ -123,15 +85,22 @@
 
 -(NSString *)keyWordDescription:(KeyWordModel *)keyword{
    
-    if ([keyword.props[@"type"] integerValue] == 3) {
-        NSString *src = keyword.props[@"src"];
-        CGFloat width = [keyword.props[@"width"] integerValue];
-        CGFloat height = [keyword.props[@"height"] integerValue];
-        return HXRICH_IMG_TEXT(src, width,  height);
+    NSString *propsDescription = @"";
+    for (NSString *key in  keyword.props) {
+        propsDescription = [NSString stringWithFormat:@"%@ %@=%@",propsDescription,key,keyword.props[key]];
+    }
+    
+    if ([keyword.props[@"type"] integerValue] == KeywordTypeImage) {
+//        NSString *src = keyword.props[@"src"];
+//        CGFloat width = [keyword.props[@"width"] integerValue];
+//        CGFloat height = [keyword.props[@"height"] integerValue];
+        NSString *str = [NSString stringWithFormat:@"<%@%@></%@>",IMG_TAG,propsDescription,IMG_TAG];
+        return str;
     }else{
-        NSString *href = keyword.props[@"href"];
+//        NSString *href = keyword.props[@"href"];
         NSString *content = keyword.content;
-        return HXRICH_LINK_TEXT(href, content);
+        NSString *str = [NSString stringWithFormat:@"<%@%@>%@</%@>",LINK_TAG,propsDescription,content,LINK_TAG];
+        return str;
     }
 }
 

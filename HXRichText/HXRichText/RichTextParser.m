@@ -35,7 +35,8 @@
     
     _originString = str;
     _resultBlock = block;
-    NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:@"<hxlink\\s*\\w*>*.*?<\\/hxlink>|<hximg\\s*\\w*>*.*?<\\/hximg>" options:0 error:nil];
+    NSString *exp = [NSString stringWithFormat:@"<%@\\s*\\w*>*.*?<\\/%@>|<%@\\s*\\w*>*.*?<\\/%@>",LINK_TAG,LINK_TAG,IMG_TAG,IMG_TAG];
+    NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern:exp options:0 error:nil];
     NSArray *arr = [expression matchesInString:_originString options:0 range:NSMakeRange(0, _originString.length)];
     _keyCount = arr.count;
     

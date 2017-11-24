@@ -19,6 +19,9 @@
 		E97DB23F1FBC4B3900CB05EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E97DB23E1FBC4B3900CB05EE /* main.m */; };
 		E97DB2481FBC4C1D00CB05EE /* HXRichTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E97DB2471FBC4C1D00CB05EE /* HXRichTextManager.m */; };
 		E9A183D71FC660EA00DA29C6 /* RichTextStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = E9A183D61FC660EA00DA29C6 /* RichTextStyle.m */; };
+		E9ED6B191FC7B77300CE9988 /* KeyBoardComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = E9ED6B181FC7B1AD00CE9988 /* KeyBoardComponent.m */; };
+		E9ED6B1C1FC7BE1A00CE9988 /* RichToolView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9ED6B1B1FC7BE1A00CE9988 /* RichToolView.xib */; };
+		E9ED6B1F1FC7BECC00CE9988 /* RichToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9ED6B1E1FC7BECC00CE9988 /* RichToolView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +48,11 @@
 		E9A183D51FC660EA00DA29C6 /* RichTextStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RichTextStyle.h; sourceTree = "<group>"; };
 		E9A183D61FC660EA00DA29C6 /* RichTextStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RichTextStyle.m; sourceTree = "<group>"; };
 		E9A183D81FC66D0300DA29C6 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
+		E9ED6B171FC7B1AD00CE9988 /* KeyBoardComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyBoardComponent.h; sourceTree = "<group>"; };
+		E9ED6B181FC7B1AD00CE9988 /* KeyBoardComponent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeyBoardComponent.m; sourceTree = "<group>"; };
+		E9ED6B1B1FC7BE1A00CE9988 /* RichToolView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RichToolView.xib; sourceTree = "<group>"; };
+		E9ED6B1D1FC7BECC00CE9988 /* RichToolView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RichToolView.h; sourceTree = "<group>"; };
+		E9ED6B1E1FC7BECC00CE9988 /* RichToolView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RichToolView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +103,8 @@
 		E97DB2451FBC4BF400CB05EE /* HXRichText */ = {
 			isa = PBXGroup;
 			children = (
+				E9ED6B201FC7C17E00CE9988 /* ToolView */,
+				E9ED6B161FC7B1AD00CE9988 /* KeyboardComponent */,
 				E97DB2461FBC4C1D00CB05EE /* HXRichTextManager.h */,
 				E97DB2471FBC4C1D00CB05EE /* HXRichTextManager.m */,
 				E971C2161FBEC7A00018002A /* RichTextParser.h */,
@@ -109,6 +119,25 @@
 				E9A183D61FC660EA00DA29C6 /* RichTextStyle.m */,
 			);
 			path = HXRichText;
+			sourceTree = "<group>";
+		};
+		E9ED6B161FC7B1AD00CE9988 /* KeyboardComponent */ = {
+			isa = PBXGroup;
+			children = (
+				E9ED6B171FC7B1AD00CE9988 /* KeyBoardComponent.h */,
+				E9ED6B181FC7B1AD00CE9988 /* KeyBoardComponent.m */,
+			);
+			path = KeyboardComponent;
+			sourceTree = "<group>";
+		};
+		E9ED6B201FC7C17E00CE9988 /* ToolView */ = {
+			isa = PBXGroup;
+			children = (
+				E9ED6B1D1FC7BECC00CE9988 /* RichToolView.h */,
+				E9ED6B1E1FC7BECC00CE9988 /* RichToolView.m */,
+				E9ED6B1B1FC7BE1A00CE9988 /* RichToolView.xib */,
+			);
+			path = ToolView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -169,6 +198,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9ED6B1C1FC7BE1A00CE9988 /* RichToolView.xib in Resources */,
 				E97DB23C1FBC4B3900CB05EE /* LaunchScreen.storyboard in Resources */,
 				E97DB2391FBC4B3900CB05EE /* Assets.xcassets in Resources */,
 				E97DB2371FBC4B3900CB05EE /* Main.storyboard in Resources */,
@@ -184,11 +214,13 @@
 			files = (
 				E97DB2481FBC4C1D00CB05EE /* HXRichTextManager.m in Sources */,
 				E9A183D71FC660EA00DA29C6 /* RichTextStyle.m in Sources */,
+				E9ED6B191FC7B77300CE9988 /* KeyBoardComponent.m in Sources */,
 				E97DB2341FBC4B3900CB05EE /* ViewController.m in Sources */,
 				E97DB23F1FBC4B3900CB05EE /* main.m in Sources */,
 				E97DB2311FBC4B3900CB05EE /* AppDelegate.m in Sources */,
 				E92A15E51FC3FD1B00AB9D7C /* RichTextEidtor.m in Sources */,
 				E92A15E21FC3D59100AB9D7C /* HXTextView.m in Sources */,
+				E9ED6B1F1FC7BECC00CE9988 /* RichToolView.m in Sources */,
 				E971C2181FBEC7A00018002A /* RichTextParser.m in Sources */,
 				E9548E811FC27F7B00258F57 /* KeyWordModel.m in Sources */,
 			);

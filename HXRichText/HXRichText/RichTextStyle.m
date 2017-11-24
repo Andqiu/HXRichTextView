@@ -32,7 +32,7 @@
                                  NSFontAttributeName:[UIFont systemFontOfSize:15],
                                  NSParagraphStyleAttributeName:paragraphStyle,
                                  NSKernAttributeName:@(0.5),
-                                 NSForegroundColorAttributeName:[UIColor redColor]
+                                 NSForegroundColorAttributeName:[UIColor blueColor]
                                  };
     
     return attributes;
