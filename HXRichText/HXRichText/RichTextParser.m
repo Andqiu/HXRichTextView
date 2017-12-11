@@ -31,6 +31,7 @@
     }
     return self;
 }
+
 -(void)parserString:(NSString *)str block:(void(^)(NSAttributedString *result))block{
     
     _originString = str;
@@ -49,20 +50,21 @@
         keyword.originString = [_originString substringWithRange:range];
         [_datas addObject:keyword];
         
-        NSString *str = [_originString substringWithRange:range];
-        NSXMLParser *xmlparser = [[NSXMLParser alloc]initWithData:[str dataUsingEncoding:NSUTF8StringEncoding]];
+        NSXMLParser *xmlparser = [[NSXMLParser alloc]initWithData:[keyword.originString dataUsingEncoding:NSUTF8StringEncoding]];
         [_xmlParsers addObject:xmlparser];
         xmlparser.delegate = self;
         [xmlparser parse];
     }
-    
+    [_xmlParsers removeAllObjects];
     // 转换关键字
     [self replaceText];
+#ifdef DEBUG
     for (int i =0;i<_datas.count;i++) {
         KeyWordModel * model = _datas[i];
         NSRange rang = model.tempRange;
         NSLog(@"原始：%@",[NSValue valueWithRange:rang]);
     }
+#endif
 }
 
 //注意* NSXMLParser 解析是同步的，所以可以不用block回调（待修正）
@@ -72,18 +74,16 @@
     NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:_originString attributes:[RichTextStyle getNormalTextAttributed]];
     for (NSInteger i=_datas.count - 1;i>=0;i--) {
         KeyWordModel *model = _datas[i];
-//        NSString *replacestr = model.content;
         NSRange rang = model.tempRange;
         NSDictionary *obj = model.props;
         if ([obj[@"type"] integerValue] == 3) {
             // 图片类型
-//            NSString *name  = obj[@"src"];
-//            CGFloat width   = [obj[@"width"] floatValue];
-//            CGFloat height  = [obj[@"height"] floatValue];
-            
             RichTextEidtor *eidtor = [[RichTextEidtor alloc]init];
             eidtor.imageMaxWidth = _imageMaxWidth;
-            [eidtor insertKeyWord:model atRange:rang richText:_originString block:^(NSString *newrichText, NSAttributedString *attributed) {
+            [eidtor insertKeyWord:model
+                          atRange:rang
+                         richText:_originString
+                            block:^(NSString *newrichText, NSAttributedString *attributed,NSRange keywordRange) {
                 [str replaceCharactersInRange:rang withAttributedString:attributed];
                 // 更新此处关键字之后所有的关键字的Range
                 for (NSInteger k = i + 1;k<_datas.count; k++) {
@@ -92,8 +92,6 @@
                     o_range.location = o_range.location - model.originString.length + 1;
                     o_model.tempRange = o_range;
                 }
-//                NSRange newrang = NSMakeRange(rang.location, 1);
-//                model.tempRange = newrang;
             }];
             
         }else{
@@ -101,19 +99,19 @@
             
             RichTextEidtor *eidtor = [[RichTextEidtor alloc]init];
             eidtor.imageMaxWidth = _imageMaxWidth;
-            [eidtor insertKeyWord:model atRange:rang richText:_originString block:^(NSString *newrichText, NSAttributedString *attributed) {
-                [str replaceCharactersInRange:rang withAttributedString:attributed];
-                // 更新此处关键字之后所有的关键字的Range
-                for (NSInteger k = i + 1;k<_datas.count; k++) {
-                    KeyWordModel *o_model = _datas[k];
-                    NSRange o_range = o_model.tempRange;
-                    o_range.location = o_range.location - model.originString.length + attributed.length;
-                    o_model.tempRange = o_range;
-                }
-                
-//                NSRange newrang = NSMakeRange(rang.location, attributed.length);
-//                model.tempRange = newrang;
-            }];
+            [eidtor insertKeyWord:model
+                          atRange:rang
+                         richText:_originString
+                            block:^(NSString *newrichText, NSAttributedString *attributed,NSRange keywordRange) {
+                                [str replaceCharactersInRange:rang withAttributedString:attributed];
+                                // 更新此处关键字之后所有的关键字的Range
+                                for (NSInteger k = i + 1;k<_datas.count; k++) {
+                                    KeyWordModel *o_model = _datas[k];
+                                    NSRange o_range = o_model.tempRange;
+                                    o_range.location = o_range.location - model.originString.length + attributed.length;
+                                    o_model.tempRange = o_range;
+                                }
+                            }];
         }
     }
     if (_resultBlock) {

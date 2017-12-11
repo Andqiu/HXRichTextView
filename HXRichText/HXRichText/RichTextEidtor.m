@@ -11,11 +11,6 @@
 
 @implementation RichTextEidtor
 
--(NSString *)getRichText{
-    
-    return @"";
-}
-
 -(NSAttributedString *)getImage:(NSString *)imageNamed
                           width:(CGFloat)width
                          height:(CGFloat)height
@@ -42,16 +37,10 @@
     return textAttachmentString;
 }
 
--(NSAttributedString *)getLinkTextAttributedStringWithString:(NSString *)str{
-    
-    NSAttributedString *attributes = [[NSAttributedString alloc]initWithString:str attributes:[RichTextStyle getLinkTextAttributed]];
-    return attributes;
-}
-
 -(void)insertKeyWord:(KeyWordModel *)keyWord
              atRange:(NSRange)range
             richText:(NSString *)richText
-               block:(void(^)(NSString *newrichText,NSAttributedString *attributed))block{
+               block:(void(^)(NSString *newrichText,NSAttributedString *keywordAttributed,NSRange keywordRange))block{
     NSInteger type = [keyWord.props[@"type"] integerValue];
     NSString *keywordDes =[self keyWordDescription:keyWord];
     if (type == KeywordTypeImage) {
@@ -61,25 +50,27 @@
         NSString *str = [richText stringByReplacingCharactersInRange:range withString:keywordDes];
         NSAttributedString *attributed = [self getImage:src width:width height:height maxWidth:_imageMaxWidth];
 
-        if (block) {
-            block(str,attributed);
-        }
-        keyWord.originString = keywordDes;
+        keyWord.standardString = keywordDes;
         NSRange range1 = NSMakeRange(range.location, 1);
         keyWord.tempRange = range1;
+        
+        if (block) {
+            block(str,attributed,range1);
+        }
+
     }else{
         NSString *content = keyWord.content;
         // 1，在原始字符串位置插入相应关键字，生成新的富文本
         NSString *str = [richText stringByReplacingCharactersInRange:range withString:keywordDes];
         // 2，生成渲染的关键字富文本
-        NSAttributedString *attributed = [self getLinkTextAttributedStringWithString:content];
- 
-        if (block) {
-            block(str,attributed);
-        }
-        keyWord.originString = keywordDes;
+        NSAttributedString *attributed = [[NSAttributedString alloc]initWithString:content attributes:[RichTextStyle getLinkTextAttributed]];
+        keyWord.standardString = keywordDes;
         NSRange range1 = NSMakeRange(range.location, attributed.length);
         keyWord.tempRange = range1;
+        if (block) {
+            block(str,attributed,range1);
+        }
+
     }
 }
 
@@ -87,17 +78,13 @@
    
     NSString *propsDescription = @"";
     for (NSString *key in  keyword.props) {
-        propsDescription = [NSString stringWithFormat:@"%@ %@=%@",propsDescription,key,keyword.props[key]];
+        propsDescription = [NSString stringWithFormat:@"%@ %@='%@'",propsDescription,key,keyword.props[key]];
     }
     
     if ([keyword.props[@"type"] integerValue] == KeywordTypeImage) {
-//        NSString *src = keyword.props[@"src"];
-//        CGFloat width = [keyword.props[@"width"] integerValue];
-//        CGFloat height = [keyword.props[@"height"] integerValue];
         NSString *str = [NSString stringWithFormat:@"<%@%@></%@>",IMG_TAG,propsDescription,IMG_TAG];
         return str;
     }else{
-//        NSString *href = keyword.props[@"href"];
         NSString *content = keyword.content;
         NSString *str = [NSString stringWithFormat:@"<%@%@>%@</%@>",LINK_TAG,propsDescription,content,LINK_TAG];
         return str;

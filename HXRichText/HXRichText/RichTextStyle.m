@@ -37,4 +37,7 @@
     
     return attributes;
 }
+
++(void)addLinkEventValue:(id)value range:(NSRange)range{
+}
 @end

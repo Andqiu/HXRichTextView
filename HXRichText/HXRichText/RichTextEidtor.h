@@ -11,13 +11,6 @@
 
 @interface RichTextEidtor : NSObject
 
-/**
- 获取textview编排的富文本字符串
- 
- @return 富文本
- */
--(NSString *)getRichText;
-
 @property(nonatomic,assign)CGFloat imageMaxWidth;
 
 /**
@@ -31,5 +24,5 @@
 -(void)insertKeyWord:(KeyWordModel *)keyWord
              atRange:(NSRange)range
             richText:(NSString *)richText
-               block:(void(^)(NSString *newrichText,NSAttributedString *attributed))block;
+               block:(void(^)(NSString *newrichText,NSAttributedString *keywordAttributed,NSRange keywordRange))block;
 @end

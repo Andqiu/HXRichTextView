@@ -62,9 +62,12 @@
     _editor.imageMaxWidth = _imageMaxWidth;
     __block NSAttributedString *_attributed = nil;
     // 更新富文本
-    [_editor insertKeyWord:keyWord atRange:range richText:_richString block:^(NSString *newrichText, NSAttributedString *attributed) {
+    [_editor insertKeyWord:keyWord
+                   atRange:range
+                  richText:_richString
+                     block:^(NSString *newrichText, NSAttributedString *keywordAttributed,NSRange keywordRange) {
         _richString = newrichText;
-        _attributed = attributed;
+        _attributed = keywordAttributed;
     }];
     // 返回用于渲染的富文本
     return _attributed;
@@ -113,74 +116,6 @@
     [self.textView scrollRangeToVisible:self.textView.selectedRange];
 }
 
--(void)insertImage:(NSString *)imageNamed{
-    
-    UIImage *image = [UIImage imageNamed:imageNamed];
-    NSRange range = self.textView.selectedRange;
-    KeyWordModel *keyword = [[KeyWordModel alloc]init];
-    NSString *width = [NSString stringWithFormat:@"%f",image.size.width];
-    NSString *height = [NSString stringWithFormat:@"%f",image.size.height];
-    keyword.props = @{@"type":@"3",@"src":imageNamed,@"width":width,@"height":height};
-    
-    NSAttributedString *atr = [self insertKeyWord:keyword atRange:range];
-    NSMutableAttributedString *newstr = [[NSMutableAttributedString alloc]initWithAttributedString:self.textView.attributedText];
-    [newstr replaceCharactersInRange:range withAttributedString:atr];
-    
-    self.textView.attributedText = newstr;
-    // 6、更新插入位置
-    [self setReplaceString:@"" replaceRange:range];
-    
-    // 7、更新已经存在的关键字位置
-    [self updateKeyRangsWithOffSet:1];
-    
-    // 8、将即将插入的关键放入关键字容器中
-    [_keyWords addObject:keyword];
-    
-    // 9、重新刷新关键字样式
-    [self updateTextViewStyle];
-    
-    // 10、更新光标位置
-    self.textView.selectedRange = NSMakeRange(range.location + keyword.content.length, 0);
-    [self.textView scrollRangeToVisible:self.textView.selectedRange];
-}
-
--(void)insertUser:(NSString *)userNamed withProps:(NSDictionary *)dic{
-    
-    // 1、获取插入的位置
-    NSRange range = self.textView.selectedRange;
-    
-    // 2、构造插入关键字对象
-    KeyWordModel *keyword = [[KeyWordModel alloc]init];
-    keyword.props = @{@"type":@"1",@"href":@"www.baidu.com"};
-    keyword.content = [NSString stringWithFormat:@"@%@",userNamed];
-    
-    // 3、获取渲染关键字富文本
-    NSAttributedString *atr = [self insertKeyWord:keyword atRange:range];
-    
-    // 4、将富文本插入到当前位置中
-    NSMutableAttributedString *newstr = [[NSMutableAttributedString alloc]initWithAttributedString:self.textView.attributedText];
-    [newstr replaceCharactersInRange:range withAttributedString:atr];
-    
-    // 5、更新textView文本
-    self.textView.attributedText = newstr;
-
-    // 6、更新插入位置
-    [self setReplaceString:keyword.content replaceRange:range];
-    
-    // 7、更新已经存在的关键字位置
-    [self updateKeyRangsWithOffSet:keyword.content.length];
-    
-    // 8、将即将插入的关键放入关键字容器中
-    [_keyWords addObject:keyword];
-    
-    // 9、重新刷新关键字样式
-    [self updateTextViewStyle];
-    
-    // 10、更新光标位置
-    self.textView.selectedRange = NSMakeRange(range.location + keyword.content.length, 0);
-    [self.textView scrollRangeToVisible:self.textView.selectedRange];
-}
-
 #pragma mark - 更新关键字位置
 -(void)setReplaceString:(NSString *)text replaceRange:(NSRange)range{
     _replaceString = text;
@@ -202,10 +137,8 @@
         //获取高亮部分
         UITextPosition *position = [ self.textView positionFromPosition:selectedRange.start offset:0];
         // 没有高亮选择的字，则对已输入的文字进行字数统计和限制
-        if (!position) {
-            
+        if (!position) {            
             [self updateKeyRangsWithOffSet:self.textView.text.length - _latestString.length];
-            
             [self updateTextViewStyle];
         }else{
             
@@ -214,8 +147,6 @@
         
         // 英文输入法下
         [self updateKeyRangsWithOffSet:self.textView.text.length - _latestString.length];
-        _latestString = self.textView.text;
-        
         [self updateTextViewStyle];
     }
 }
@@ -273,6 +204,7 @@
     self.textView.attributedText = mutable_attributed;
     for (KeyWordModel *keyword in _keyWords) {
         NSRange range = keyword.tempRange;
+        NSLog(@"end -----> %@",[NSValue valueWithRange:range]);
         if (range.location == 0 && range.length == 0) {
             if ([keyword.props[@"type"] integerValue] != 3) {
                 

@@ -80,7 +80,7 @@
     keyword.props = @{@"src":imageNamed,@"type":@(KeywordTypeImage),@"width":@(512),@"height":@(384)};
     [_textManger insertKeyword:keyword];
 }
--(void)insertUser:(NSString *)name {       
+-(void)insertUser:(NSString *)name {
     KeyWordModel *keyword = [[KeyWordModel alloc]init];
     keyword.content = [NSString stringWithFormat:@"@%@",name];
     keyword.props = @{@"uid":@(123),@"type":@(KeywordTypeUser)};
@@ -98,7 +98,6 @@
 - (void)textViewDidChange:(UITextView *)textView{
     [_textManger update];
 //    [self update];
-    
 }
 
 #pragma mark - ---------------------------------原始方案--已废弃---------------------------------------

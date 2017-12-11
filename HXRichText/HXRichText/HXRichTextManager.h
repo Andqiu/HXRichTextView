@@ -32,12 +32,8 @@
 /**
  插入一个关键字
 
- @param keyWord 关键字
- @param range 位置
- @return 关键字富文本
+ @param keyword 关键字
  */
--(NSAttributedString *)insertKeyWord:(KeyWordModel *)keyWord atRange:(NSRange)range;
-
 -(void)insertKeyword:(KeyWordModel *)keyword;
 
 -(void)setReplaceString:(NSString *)text replaceRange:(NSRange)range;

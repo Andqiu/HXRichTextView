@@ -38,8 +38,14 @@ typedef  NS_ENUM(NSInteger,KeywordType){
 @property(nonatomic)NSString * content;
 
 /**
- 标签字符串
+ 标签字符串，可能会很多的空格符
  */
 @property(nonatomic)NSString * originString;
+
+
+/**
+ 标准的模板字符串
+ */
+@property(nonatomic)NSString * standardString;
 
 @end
