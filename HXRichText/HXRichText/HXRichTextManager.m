@@ -108,12 +108,13 @@
     // 7、将即将插入的关键放入关键字容器中
     [_keyWords addObject:keyword];
     
-    // 10、重新刷新关键字样式
+    // 8、重新刷新关键字样式
     [self updateTextViewStyle];
     
-    // 11、更新光标位置
+    // 9、更新光标位置
     self.textView.selectedRange = NSMakeRange(range.location + keyword.content.length, 0);
     [self.textView scrollRangeToVisible:self.textView.selectedRange];
+ 
 }
 
 #pragma mark - 更新关键字位置
@@ -149,6 +150,8 @@
         [self updateKeyRangsWithOffSet:self.textView.text.length - _latestString.length];
         [self updateTextViewStyle];
     }
+    self.textView.selectedRange = _selectedRange;
+    [self.textView scrollRangeToVisible:self.textView.selectedRange];
 }
 
 -(void)updateKeyRangsWithOffSet:(NSInteger)offset{
@@ -201,7 +204,7 @@
     
     NSMutableAttributedString *mutable_attributed = self.textView.attributedText.mutableCopy;
     [mutable_attributed addAttributes:[RichTextStyle getNormalTextAttributed] range:NSMakeRange(0, mutable_attributed.length)];
-    self.textView.attributedText = mutable_attributed;
+//    self.textView.attributedText = mutable_attributed;
     for (KeyWordModel *keyword in _keyWords) {
         NSRange range = keyword.tempRange;
         NSLog(@"end -----> %@",[NSValue valueWithRange:range]);
@@ -214,12 +217,11 @@
         }else{
             if ([keyword.props[@"type"] integerValue] != 3) {
                 [mutable_attributed addAttributes:[RichTextStyle getLinkTextAttributed] range:range];
-                self.textView.attributedText = mutable_attributed;
-                self.textView.selectedRange = _selectedRange;
-                [self.textView scrollRangeToVisible: self.textView.selectedRange];
             }
         }
     }
+    self.textView.attributedText = mutable_attributed;
+
 }
 
 @end
