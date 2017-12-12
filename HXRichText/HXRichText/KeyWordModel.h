@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #define LINK_TAG @"HX_LINK"
 #define IMG_TAG @"HX_IMG"
+#define RICH_SCHEME @"hx_rich_scheme"
 
 typedef  NS_ENUM(NSInteger,KeywordType){
     KeywordTypeLink = 0,
@@ -21,6 +22,9 @@ typedef  NS_ENUM(NSInteger,KeywordType){
  关键字模型
  */
 @interface KeyWordModel : NSObject
+
+@property(nonatomic,assign)NSInteger kid;
+
 
 /**
  临时range

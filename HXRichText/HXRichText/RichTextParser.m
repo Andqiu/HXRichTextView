@@ -42,12 +42,14 @@
     _keyCount = arr.count;
     
     // 开始解析
-    for (NSTextCheckingResult* result in arr) {
+    for (NSInteger i =0 ;i<arr.count;i++) {
+        NSTextCheckingResult* result =  arr[i];
         KeyWordModel *keyword = [[KeyWordModel alloc]init];
         //从NSTextCheckingResult类中取出range属性
         NSRange range = result.range;
         keyword.tempRange = range;
         keyword.originString = [_originString substringWithRange:range];
+        keyword.kid = i;
         [_datas addObject:keyword];
         
         NSXMLParser *xmlparser = [[NSXMLParser alloc]initWithData:[keyword.originString dataUsingEncoding:NSUTF8StringEncoding]];

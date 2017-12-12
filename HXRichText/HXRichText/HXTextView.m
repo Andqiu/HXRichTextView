@@ -30,6 +30,7 @@
         self.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5);
         self.clipsToBounds = YES;
         self.delegate = self;
+        self.editable = NO;
         _keyboardComponent = [[KeyBoardComponent alloc]init];
         _keyboardComponent.delegate = self;
         [_keyboardComponent registComponent];
@@ -57,7 +58,7 @@
                 [wself insertImage:@"test.jpg"];
                 break;
             case 2:
-                [wself insertUser:@"#厚行资产-金股成长5号（第一期）#"];
+                [wself insertAct:@"#厚行资产-金股成长5号（第一期）#"];
                 break;
                 
             default:
@@ -78,12 +79,21 @@
     
     KeyWordModel *keyword = [[KeyWordModel alloc]init];
     keyword.props = @{@"src":imageNamed,@"type":@(KeywordTypeImage),@"width":@(512),@"height":@(384)};
+    keyword.kid = _textManger.keyWords.count;
     [_textManger insertKeyword:keyword];
 }
 -(void)insertUser:(NSString *)name {
     KeyWordModel *keyword = [[KeyWordModel alloc]init];
+    keyword.kid = _textManger.keyWords.count;
     keyword.content = [NSString stringWithFormat:@"@%@",name];
     keyword.props = @{@"uid":@(123),@"type":@(KeywordTypeUser)};
+    [_textManger insertKeyword:keyword];
+}
+-(void)insertAct:(NSString *)name {
+    KeyWordModel *keyword = [[KeyWordModel alloc]init];
+    keyword.kid = _textManger.keyWords.count;
+    keyword.content = [NSString stringWithFormat:@"%@",name];
+    keyword.props = @{@"uid":@(123),@"type":@(KeywordTypeProduct)};
     [_textManger insertKeyword:keyword];
 }
 #pragma mark - delegate
@@ -100,6 +110,42 @@
 //    [self update];
 }
 
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction{
+    if ([URL.absoluteString hasPrefix:RICH_SCHEME]) {
+        NSInteger index = [URL.lastPathComponent integerValue];
+        if (index > _textManger.keyWords.count) {
+            return NO;
+        }
+        KeyWordModel *keyword = _textManger.keyWords[index];
+        if (_didClickKeywordBlock) {
+            _didClickKeywordBlock(keyword);
+        }
+    }
+    
+    return NO;
+}
+- (BOOL)textView:(UITextView *)textView shouldInteractWithTextAttachment:(NSTextAttachment *)textAttachment inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction{
+    return NO;
+}
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange{
+    if ([URL.absoluteString hasPrefix:RICH_SCHEME]) {
+        NSInteger index = [URL.lastPathComponent integerValue];
+        if (index > _textManger.keyWords.count) {
+            return NO;
+        }
+        KeyWordModel *keyword = _textManger.keyWords[index];
+        if (_didClickKeywordBlock) {
+            _didClickKeywordBlock(keyword);
+        }
+    }
+    
+    return NO;
+
+}
+- (BOOL)textView:(UITextView *)textView shouldInteractWithTextAttachment:(NSTextAttachment *)textAttachment inRange:(NSRange)characterRange{
+    return NO;
+}
 #pragma mark - ---------------------------------原始方案--已废弃---------------------------------------
 #pragma mark - 文本样式
 -(NSDictionary *)linkTextAttributed{

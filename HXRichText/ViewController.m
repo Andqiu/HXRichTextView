@@ -29,6 +29,9 @@ static NSString *richString = @"不同领域、不同层次的人，<HX_LINK typ
     _richTextView = [[HXTextView alloc]initWithFrame:CGRectMake(0, 64, 375, 500)];
     [self.view addSubview:_richTextView];
     [_richTextView setRichText:richString];
+    _richTextView.didClickKeywordBlock = ^(KeyWordModel *keyword) {
+        NSLog(@"-----> %ld-,%@",keyword.kid,keyword.standardString);
+    };
 }
 
 

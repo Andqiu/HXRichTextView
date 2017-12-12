@@ -11,7 +11,7 @@
 
 @interface HXTextView : UITextView
 @property(nonatomic,strong) HXRichTextManager *textManger;
-
+@property (nonatomic, copy) void(^didClickKeywordBlock)(KeyWordModel *keyword);
 
 -(NSString *)getCurrentRichText;
 

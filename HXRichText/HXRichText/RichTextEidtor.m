@@ -48,11 +48,13 @@
         CGFloat width = [keyWord.props[@"width"] floatValue];
         CGFloat height = [keyWord.props[@"height"] floatValue];
         NSString *str = [richText stringByReplacingCharactersInRange:range withString:keywordDes];
-        NSAttributedString *attributed = [self getImage:src width:width height:height maxWidth:_imageMaxWidth];
-
         keyWord.standardString = keywordDes;
         NSRange range1 = NSMakeRange(range.location, 1);
         keyWord.tempRange = range1;
+        
+        NSAttributedString *imgattributed = [self getImage:src width:width height:height maxWidth:_imageMaxWidth];
+        NSMutableAttributedString *attributed = [[NSMutableAttributedString alloc]initWithAttributedString:imgattributed];
+        [attributed addAttribute:NSLinkAttributeName value:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%ld",RICH_SCHEME,keyWord.kid]] range:NSMakeRange(0, attributed.length)];
         
         if (block) {
             block(str,attributed,range1);
@@ -62,15 +64,21 @@
         NSString *content = keyWord.content;
         // 1，在原始字符串位置插入相应关键字，生成新的富文本
         NSString *str = [richText stringByReplacingCharactersInRange:range withString:keywordDes];
-        // 2，生成渲染的关键字富文本
-        NSAttributedString *attributed = [[NSAttributedString alloc]initWithString:content attributes:[RichTextStyle getLinkTextAttributed]];
         keyWord.standardString = keywordDes;
-        NSRange range1 = NSMakeRange(range.location, attributed.length);
+        NSRange range1 = NSMakeRange(range.location, content.length);
         keyWord.tempRange = range1;
+        
+        // 2，生成渲染的关键字富文本
+        NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[RichTextStyle getLinkTextAttributed]];
+        
+        NSURL *link = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%ld",RICH_SCHEME,keyWord.kid]];
+        [attributes setObject:link forKey:NSLinkAttributeName];
+        NSAttributedString *attributed = [[NSAttributedString alloc]initWithString:content attributes:attributes];
+
         if (block) {
             block(str,attributed,range1);
         }
-
+        
     }
 }
 

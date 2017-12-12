@@ -11,7 +11,6 @@
 
 @implementation HXRichTextManager{
     
-    NSMutableArray *_keyWords;
     
     NSString *_richString;
 
@@ -38,7 +37,7 @@
     }
     return self;
 }
-
+#pragma mark - public
 -(NSAttributedString *)renderRichText:(NSString *)text{
     _richString = text;
     if (!_parser) {
@@ -55,32 +54,8 @@
     return str;
 }
 
--(NSAttributedString *)insertKeyWord:(KeyWordModel *)keyWord atRange:(NSRange)range{
-    if (!_editor) {
-        _editor = [[RichTextEidtor alloc]init];
-    }
-    _editor.imageMaxWidth = _imageMaxWidth;
-    __block NSAttributedString *_attributed = nil;
-    // 更新富文本
-    [_editor insertKeyWord:keyWord
-                   atRange:range
-                  richText:_richString
-                     block:^(NSString *newrichText, NSAttributedString *keywordAttributed,NSRange keywordRange) {
-        _richString = newrichText;
-        _attributed = keywordAttributed;
-    }];
-    // 返回用于渲染的富文本
-    return _attributed;
-
-}
-
--(NSString *)getRichText{
-    return _richString;
-}
-
-#pragma mark - 插入
 -(void)insertKeyword:(KeyWordModel *)keyword{
-
+    
     if (keyword.props[@"type"] == nil) {
         return;
     }
@@ -112,9 +87,33 @@
     [self updateTextViewStyle];
     
     // 9、更新光标位置
-    self.textView.selectedRange = NSMakeRange(range.location + keyword.content.length, 0);
+    self.textView.selectedRange = NSMakeRange((range.location + (keyword.content.length<=0?1:keyword.content.length)), 0);
     [self.textView scrollRangeToVisible:self.textView.selectedRange];
- 
+    
+}
+
+-(NSString *)getRichText{
+    return _richString;
+}
+
+#pragma mark - private
+-(NSAttributedString *)insertKeyWord:(KeyWordModel *)keyWord atRange:(NSRange)range{
+    if (!_editor) {
+        _editor = [[RichTextEidtor alloc]init];
+    }
+    _editor.imageMaxWidth = _imageMaxWidth;
+    __block NSAttributedString *_attributed = nil;
+    // 更新富文本
+    [_editor insertKeyWord:keyWord
+                   atRange:range
+                  richText:_richString
+                     block:^(NSString *newrichText, NSAttributedString *keywordAttributed,NSRange keywordRange) {
+        _richString = newrichText;
+        _attributed = keywordAttributed;
+    }];
+    // 返回用于渲染的富文本
+    return _attributed;
+
 }
 
 #pragma mark - 更新关键字位置
