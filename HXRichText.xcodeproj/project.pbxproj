@@ -92,6 +92,7 @@
 				E97DB2321FBC4B3900CB05EE /* ViewController.h */,
 				E97DB2331FBC4B3900CB05EE /* ViewController.m */,
 				E97DB2351FBC4B3900CB05EE /* Main.storyboard */,
+				E9ED6B201FC7C17E00CE9988 /* ToolView */,
 				E97DB2381FBC4B3900CB05EE /* Assets.xcassets */,
 				E9A183D81FC66D0300DA29C6 /* demo.gif */,
 				E97DB23A1FBC4B3900CB05EE /* LaunchScreen.storyboard */,
@@ -104,7 +105,6 @@
 		E97DB2451FBC4BF400CB05EE /* tool */ = {
 			isa = PBXGroup;
 			children = (
-				E9ED6B201FC7C17E00CE9988 /* ToolView */,
 				E9ED6B161FC7B1AD00CE9988 /* KeyboardComponent */,
 			);
 			path = tool;

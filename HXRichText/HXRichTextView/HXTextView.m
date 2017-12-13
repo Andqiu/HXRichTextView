@@ -9,6 +9,7 @@
 #import "HXTextView.h"
 #import "KeyBoardComponent.h"
 #import "RichToolView.h"
+#import "RichTextStyle.h"
 
 @interface HXTextView()<UITextViewDelegate,keyBoardComponentDelegate>
 @end
@@ -30,13 +31,16 @@
         self.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5);
         self.clipsToBounds = YES;
         self.delegate = self;
-        self.editable = NO;
-        _keyboardComponent = [[KeyBoardComponent alloc]init];
-        _keyboardComponent.delegate = self;
-        [_keyboardComponent registComponent];
     }
     return self;
 }
+
+-(void)didMoveToWindow{
+    _keyboardComponent = [[KeyBoardComponent alloc]init];
+    _keyboardComponent.delegate = self;
+    [_keyboardComponent registComponent];
+}
+
 
 -(void)setRichText:(NSString *)richText{
     _textManger = [[HXRichTextManager alloc]init];
@@ -47,25 +51,11 @@
 }
 
 -(UIView *)KeyBoardComponentTopView{
-    RichToolView *v = [[NSBundle mainBundle] loadNibNamed:@"RichToolView" owner:self options:nil].firstObject;
-    __weak typeof(self)wself = self;
-    [v setClickBlock:^(NSInteger index) {
-        switch (index) {
-            case 0:
-                [wself insertUser:@"大圣偏头痛"];
-                break;
-            case 1:
-                [wself insertImage:@"test.jpg"];
-                break;
-            case 2:
-                [wself insertAct:@"#厚行资产-金股成长5号（第一期）#"];
-                break;
-                
-            default:
-                break;
-        }
-    }];
-    return v;
+    if (_keyboradToolView) {
+      return  _keyboradToolView();
+    }else{
+        return  nil;
+    }
 }
 -(UIView *)KeyBoardComponentRigsterView:(KeyBoardComponent *)keyBoardComponent{
     return self;
@@ -75,31 +65,30 @@
 -(NSString *)getCurrentRichText{
     return [_textManger getRichText];;
 }
--(void)insertImage:(NSString *)imageNamed{
-    
-    KeyWordModel *keyword = [[KeyWordModel alloc]init];
-    keyword.props = @{@"src":imageNamed,@"type":@(KeywordTypeImage),@"width":@(512),@"height":@(384)};
-    keyword.kid = _textManger.keyWords.count;
-    [_textManger insertKeyword:keyword];
-}
--(void)insertUser:(NSString *)name {
-    KeyWordModel *keyword = [[KeyWordModel alloc]init];
-    keyword.kid = _textManger.keyWords.count;
-    keyword.content = [NSString stringWithFormat:@"@%@",name];
-    keyword.props = @{@"uid":@(123),@"type":@(KeywordTypeUser)};
-    [_textManger insertKeyword:keyword];
-}
--(void)insertAct:(NSString *)name {
-    KeyWordModel *keyword = [[KeyWordModel alloc]init];
-    keyword.kid = _textManger.keyWords.count;
-    keyword.content = [NSString stringWithFormat:@"%@",name];
-    keyword.props = @{@"uid":@(123),@"type":@(KeywordTypeProduct)};
-    [_textManger insertKeyword:keyword];
-}
+//-(void)insertImage:(NSString *)imageNamed{
+//    
+//    KeyWordModel *keyword = [[KeyWordModel alloc]init];
+//    keyword.props = @{@"src":imageNamed,@"type":@(KeywordTypeImage),@"width":@(512),@"height":@(384)};
+//    keyword.kid = _textManger.keyWords.count;
+//    [_textManger insertKeyword:keyword];
+//}
+//-(void)insertUser:(NSString *)name {
+//    KeyWordModel *keyword = [[KeyWordModel alloc]init];
+//    keyword.kid = _textManger.keyWords.count;
+//    keyword.content = [NSString stringWithFormat:@"@%@",name];
+//    keyword.props = @{@"uid":@(123),@"type":@(KeywordTypeUser)};
+//    [_textManger insertKeyword:keyword];
+//}
+//-(void)insertAct:(NSString *)name {
+//    KeyWordModel *keyword = [[KeyWordModel alloc]init];
+//    keyword.kid = _textManger.keyWords.count;
+//    keyword.content = [NSString stringWithFormat:@"%@",name];
+//    keyword.props = @{@"uid":@(123),@"type":@(KeywordTypeProduct)};
+//    [_textManger insertKeyword:keyword];
+//}
 #pragma mark - delegate
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-//    [self setReplaceString:text replaceRange:range];
     [_textManger setReplaceString:text replaceRange:range];
     return YES;
 }
@@ -107,7 +96,6 @@
 
 - (void)textViewDidChange:(UITextView *)textView{
     [_textManger update];
-//    [self update];
 }
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction{

@@ -10,8 +10,14 @@
 #import "HXRichTextManager.h"
 
 @interface HXTextView : UITextView
+
 @property(nonatomic,strong) HXRichTextManager *textManger;
 @property (nonatomic, copy) void(^didClickKeywordBlock)(KeyWordModel *keyword);
+
+/**
+ 返回键盘辅助工具栏
+ */
+@property (nonatomic, copy) UIView *(^keyboradToolView)(void);
 
 -(NSString *)getCurrentRichText;
 
@@ -22,6 +28,4 @@
  */
 -(void)setRichText:(NSString *)richText;
 
--(void)insertImage:(NSString *)imageNamed;
--(void)insertUser:(NSString *)name;
 @end
