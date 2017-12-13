@@ -85,7 +85,8 @@
 		E97DB22E1FBC4B3900CB05EE /* HXRichText */ = {
 			isa = PBXGroup;
 			children = (
-				E97DB2451FBC4BF400CB05EE /* HXRichText */,
+				E98958611FE0C5BE00B6466C /* HXRichTextView */,
+				E97DB2451FBC4BF400CB05EE /* tool */,
 				E97DB22F1FBC4B3900CB05EE /* AppDelegate.h */,
 				E97DB2301FBC4B3900CB05EE /* AppDelegate.m */,
 				E97DB2321FBC4B3900CB05EE /* ViewController.h */,
@@ -100,25 +101,40 @@
 			path = HXRichText;
 			sourceTree = "<group>";
 		};
-		E97DB2451FBC4BF400CB05EE /* HXRichText */ = {
+		E97DB2451FBC4BF400CB05EE /* tool */ = {
 			isa = PBXGroup;
 			children = (
 				E9ED6B201FC7C17E00CE9988 /* ToolView */,
 				E9ED6B161FC7B1AD00CE9988 /* KeyboardComponent */,
+			);
+			path = tool;
+			sourceTree = "<group>";
+		};
+		E98958611FE0C5BE00B6466C /* HXRichTextView */ = {
+			isa = PBXGroup;
+			children = (
+				E98958621FE0C5E800B6466C /* model */,
 				E97DB2461FBC4C1D00CB05EE /* HXRichTextManager.h */,
 				E97DB2471FBC4C1D00CB05EE /* HXRichTextManager.m */,
 				E971C2161FBEC7A00018002A /* RichTextParser.h */,
 				E971C2171FBEC7A00018002A /* RichTextParser.m */,
 				E92A15E31FC3FD1A00AB9D7C /* RichTextEidtor.h */,
 				E92A15E41FC3FD1B00AB9D7C /* RichTextEidtor.m */,
-				E9548E7F1FC27F7B00258F57 /* KeyWordModel.h */,
-				E9548E801FC27F7B00258F57 /* KeyWordModel.m */,
 				E92A15E01FC3D59100AB9D7C /* HXTextView.h */,
 				E92A15E11FC3D59100AB9D7C /* HXTextView.m */,
 				E9A183D51FC660EA00DA29C6 /* RichTextStyle.h */,
 				E9A183D61FC660EA00DA29C6 /* RichTextStyle.m */,
 			);
-			path = HXRichText;
+			path = HXRichTextView;
+			sourceTree = "<group>";
+		};
+		E98958621FE0C5E800B6466C /* model */ = {
+			isa = PBXGroup;
+			children = (
+				E9548E7F1FC27F7B00258F57 /* KeyWordModel.h */,
+				E9548E801FC27F7B00258F57 /* KeyWordModel.m */,
+			);
+			path = model;
 			sourceTree = "<group>";
 		};
 		E9ED6B161FC7B1AD00CE9988 /* KeyboardComponent */ = {
