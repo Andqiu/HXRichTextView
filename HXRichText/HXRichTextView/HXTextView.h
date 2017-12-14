@@ -17,7 +17,7 @@
 /**
  返回键盘辅助工具栏
  */
-@property (nonatomic, copy) UIView *(^keyboradToolView)(void);
+@property (nonatomic, strong) UIView *keyboradToolView;
 
 -(NSString *)getCurrentRichText;
 

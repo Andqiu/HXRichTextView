@@ -70,7 +70,7 @@
     [self setReplaceString:(keyword_type != KeywordTypeImage)?keyword.content:@"" replaceRange:range];
     
     // 3、更新已经存在的关键字位置 并修改插入部分的样式
-    NSMutableAttributedString *mutable_ats = [self updateKeyRangsWithOffSet:(keyword_type != KeywordTypeImage)?keyword.content.length:1];
+    NSMutableAttributedString *mutable_ats = [self updateKeyRangsWithOffSet:(keyword_type != KeywordTypeImage)?(keyword.content.length+1):2 textDidChange:NO];
     
     // 4、获取渲染关键字富文本
     NSAttributedString *keyword_ast = [self insertKeyWord:keyword atRange:range];
@@ -88,7 +88,7 @@
     _latestString = self.textView.attributedText;
     
     // 9、更新光标位置
-    self.textView.selectedRange = NSMakeRange((range.location + (keyword.content.length<=0?1:keyword.content.length)), 0);
+    self.textView.selectedRange = NSMakeRange(keyword.tempRange.location+keyword.tempRange.length, 0);//NSMakeRange((range.location + (keyword.content.length<=0?(1+2):keyword.content.length + 2)), 0);
     [self.textView scrollRangeToVisible:self.textView.selectedRange];
     
 }
@@ -139,23 +139,24 @@
         UITextPosition *position = [ self.textView positionFromPosition:selectedRange.start offset:0];
         // 没有高亮选择的字，则对已输入的文字进行字数统计和限制
         if (!position) {            
-           NSMutableAttributedString *mutable_ats =  [self updateKeyRangsWithOffSet:self.textView.text.length - _latestString.length];
+           NSMutableAttributedString *mutable_ats =  [self updateKeyRangsWithOffSet:self.textView.text.length - _latestString.length textDidChange:YES];
             self.textView.attributedText = mutable_ats;
+            _latestString = mutable_ats;
         }else{
             
         }
     }else{
         
         // 英文输入法下
-       NSMutableAttributedString *mutable_ats = [self updateKeyRangsWithOffSet:self.textView.text.length - _latestString.length];
+       NSMutableAttributedString *mutable_ats = [self updateKeyRangsWithOffSet:self.textView.text.length - _latestString.length textDidChange:YES];
         self.textView.attributedText = mutable_ats;
+        _latestString = mutable_ats;
     }
     self.textView.selectedRange = _selectedRange;
     [self.textView scrollRangeToVisible:self.textView.selectedRange];
 }
 
--(NSMutableAttributedString *)updateKeyRangsWithOffSet:(NSInteger)offset{
-    _latestString = self.textView.attributedText;
+-(NSMutableAttributedString *)updateKeyRangsWithOffSet:(NSInteger)offset textDidChange:(BOOL)didChange{
     NSRange editRange = NSMakeRange(0, 0);
     KeyWordModel *editKeyword = nil;
     
@@ -177,8 +178,11 @@
                 
                 // 插入位置的在关键字上
                 model.tempRange = NSMakeRange(0, 0);
-                
-                editRange = NSMakeRange(rang.location, rang.length+offset);
+                if (didChange) {
+                    editRange = NSMakeRange(rang.location, rang.length+offset);
+                }else{
+                    editRange = rang;
+                }
                 editKeyword = model;
             }
         }
@@ -199,8 +203,11 @@
             }else{
                 // 插入位置的在关键字上
                 model.tempRange = NSMakeRange(0, 0);
-                
-                editRange = NSMakeRange(rang.location, rang.length+offset);
+                if (didChange) {
+                    editRange = NSMakeRange(rang.location, rang.length+offset);
+                }else{
+                    editRange = rang;
+                }
                 editKeyword = model;
             }
         }
@@ -213,9 +220,10 @@
         [_keyWords removeObject:editKeyword];
         
         // 更新已编辑的关键字样式
-        [mutable_attributed addAttributes:[RichTextStyle getNormalTextAttributed] range:NSMakeRange(0, mutable_attributed.length)];
-        [mutable_attributed removeAttribute:NSLinkAttributeName range:editRange];
-
+        [mutable_attributed addAttributes:[RichTextStyle getNormalTextAttributed] range:editRange];
+        if ([editKeyword.props[@"type"] integerValue] != 3) {
+            [mutable_attributed removeAttribute:NSLinkAttributeName range:editRange];
+        }
     }
     return mutable_attributed;
 }

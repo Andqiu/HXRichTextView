@@ -31,11 +31,15 @@
         self.textContainerInset = UIEdgeInsetsMake(5, 5, 5, 5);
         self.clipsToBounds = YES;
         self.delegate = self;
+        _textManger = [[HXRichTextManager alloc]init];
+        _textManger.textView = self;
+//        self.linkTextAttributes = [RichTextStyle getNormalTextAttributed];
+        _textManger.imageMaxWidth = self.frame.size.width;
     }
     return self;
 }
 
--(void)didMoveToWindow{
+-(void)didAddSubview:(UIView *)view{
     _keyboardComponent = [[KeyBoardComponent alloc]init];
     _keyboardComponent.delegate = self;
     [_keyboardComponent registComponent];
@@ -43,16 +47,14 @@
 
 
 -(void)setRichText:(NSString *)richText{
-    _textManger = [[HXRichTextManager alloc]init];
-    _textManger.textView = self;
-    _textManger.imageMaxWidth = self.frame.size.width;
+
     self.attributedText = [_textManger renderRichText:richText];
     _latestString = self.text;
 }
 
 -(UIView *)KeyBoardComponentTopView{
     if (_keyboradToolView) {
-      return  _keyboradToolView();
+      return  _keyboradToolView;
     }else{
         return  nil;
     }
