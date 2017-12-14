@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		49C9AD7FD9C38BE82ED45F5B /* Pods_HXRichText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DB17DF4C6D78FA8D7431F13 /* Pods_HXRichText.framework */; };
 		E92A15E21FC3D59100AB9D7C /* HXTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = E92A15E11FC3D59100AB9D7C /* HXTextView.m */; };
 		E92A15E51FC3FD1B00AB9D7C /* RichTextEidtor.m in Sources */ = {isa = PBXBuildFile; fileRef = E92A15E41FC3FD1B00AB9D7C /* RichTextEidtor.m */; };
 		E9548E811FC27F7B00258F57 /* KeyWordModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E9548E801FC27F7B00258F57 /* KeyWordModel.m */; };
@@ -25,6 +26,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6D5584AF90D5C71DF96645CA /* Pods-HXRichText.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HXRichText.release.xcconfig"; path = "Pods/Target Support Files/Pods-HXRichText/Pods-HXRichText.release.xcconfig"; sourceTree = "<group>"; };
+		6DB17DF4C6D78FA8D7431F13 /* Pods_HXRichText.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HXRichText.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E858466812763BACDB4479FD /* Pods-HXRichText.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HXRichText.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HXRichText/Pods-HXRichText.debug.xcconfig"; sourceTree = "<group>"; };
 		E92A15E01FC3D59100AB9D7C /* HXTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXTextView.h; sourceTree = "<group>"; };
 		E92A15E11FC3D59100AB9D7C /* HXTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HXTextView.m; sourceTree = "<group>"; };
 		E92A15E31FC3FD1A00AB9D7C /* RichTextEidtor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RichTextEidtor.h; sourceTree = "<group>"; };
@@ -60,17 +64,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49C9AD7FD9C38BE82ED45F5B /* Pods_HXRichText.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		609B6E6E9486C7435B9EB47C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E858466812763BACDB4479FD /* Pods-HXRichText.debug.xcconfig */,
+				6D5584AF90D5C71DF96645CA /* Pods-HXRichText.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		862FD03814C5CACDF85DFF45 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6DB17DF4C6D78FA8D7431F13 /* Pods_HXRichText.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E97DB2231FBC4B3900CB05EE = {
 			isa = PBXGroup;
 			children = (
 				E97DB22E1FBC4B3900CB05EE /* HXRichText */,
 				E97DB22D1FBC4B3900CB05EE /* Products */,
+				609B6E6E9486C7435B9EB47C /* Pods */,
+				862FD03814C5CACDF85DFF45 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -163,9 +187,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E97DB2421FBC4B3900CB05EE /* Build configuration list for PBXNativeTarget "HXRichText" */;
 			buildPhases = (
+				4E6B0803E1E95667DC34B32B /* [CP] Check Pods Manifest.lock */,
 				E97DB2281FBC4B3900CB05EE /* Sources */,
 				E97DB2291FBC4B3900CB05EE /* Frameworks */,
 				E97DB22A1FBC4B3900CB05EE /* Resources */,
+				F92368B6D3481D412E37FF16 /* [CP] Embed Pods Frameworks */,
+				FD60C1E2E94A95033C941E8B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -222,6 +249,60 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4E6B0803E1E95667DC34B32B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HXRichText-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F92368B6D3481D412E37FF16 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-HXRichText/Pods-HXRichText-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HXRichText/Pods-HXRichText-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FD60C1E2E94A95033C941E8B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HXRichText/Pods-HXRichText-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E97DB2281FBC4B3900CB05EE /* Sources */ = {
@@ -370,6 +451,7 @@
 		};
 		E97DB2431FBC4B3900CB05EE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E858466812763BACDB4479FD /* Pods-HXRichText.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -384,6 +466,7 @@
 		};
 		E97DB2441FBC4B3900CB05EE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6D5584AF90D5C71DF96645CA /* Pods-HXRichText.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
