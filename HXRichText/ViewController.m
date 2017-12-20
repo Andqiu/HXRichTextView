@@ -31,7 +31,7 @@ static NSString *richString = @"不同领域、不同层次的人，<HX_LINK el_
             case 0:{
                 KeyWordModel *keyword = [[KeyWordModel alloc]init];
                 keyword.kid = _richTextView.textManger.keyWords.count;
-                keyword.content = [NSString stringWithFormat:@"@我是你大爷"];
+                keyword.content = [NSString stringWithFormat:@"@用户小明"];
                 keyword.props = @{PROP_UID:@(123),PROP_EL_TYPE:@(KeywordTypeUser)};
                 [_richTextView.textManger insertKeyword:keyword];
 
