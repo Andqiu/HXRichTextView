@@ -11,6 +11,18 @@
 #define IMG_TAG @"HX_IMG"
 #define RICH_SCHEME @"hx_rich_scheme"
 
+// 标签属性
+#define PROP_WIDTH @"width"
+#define PROP_HEIGHT @"height"
+#define PROP_SRC @"src"
+#define PROP_EL_TYPE @"el_type"
+#define PROP_TYPE @"type"
+#define PROP_UID @"uid"
+#define PROP_PID @"pid"
+#define PROP_NAME @"name"
+#define PROP_URL @"url"
+#define PROP_IMAGE @"image"
+
 typedef  NS_ENUM(NSInteger,KeywordType){
     KeywordTypeLink = 0,
     KeywordTypeUser = 1,

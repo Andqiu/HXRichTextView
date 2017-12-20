@@ -21,8 +21,6 @@
  */
 @property(nonatomic,assign)CGFloat imageMaxWidth;
 
--(NSString *)getRichText;
-
 /**
  获取渲染字符串
 

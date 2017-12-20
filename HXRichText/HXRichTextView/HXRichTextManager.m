@@ -13,12 +13,15 @@
     
     //    无效的关键字（被编辑过）
     NSMutableArray *_invalidKeywords;
-    NSString *_richString;
-
+    
+    // 网络图片
+    NSMutableArray *_webImageKeywords;
+    
+    //    渲染的富文本，关键字已经被替换
     NSAttributedString *_latestString;
+    
     NSString *_replaceString;
     NSRange _replaceRange;
-    NSRange _selectedRange;
 }
 +(instancetype)share{
     static HXRichTextManager *instance = nil;
@@ -36,12 +39,12 @@
     if (self) {
         _keyWords = [NSMutableArray array];
         _invalidKeywords = [NSMutableArray array];
+        _webImageKeywords = [NSMutableArray array];
     }
     return self;
 }
 #pragma mark - public
 -(NSAttributedString *)renderRichText:(NSString *)text{
-    _richString = text;
     if (!_parser) {
         _parser = [[RichTextParser alloc]init];
     }
@@ -53,15 +56,38 @@
     }];
     [_keyWords addObjectsFromArray:_parser.datas];
     _latestString = str;
+    
+    for (KeyWordModel *keyword in _keyWords) {
+        NSLog(@"%@-%@",keyword.props[PROP_EL_TYPE],keyword.props[PROP_SRC]);
+        if ([keyword.props[PROP_EL_TYPE] integerValue] == 3 && [keyword.props[PROP_SRC] hasPrefix:@"http"]) {
+            [_webImageKeywords addObject:keyword];
+        }
+    }
+    
+    // 下载网络图片
+    for (KeyWordModel *imageKeyword in _webImageKeywords) {
+        NSString *urlString = imageKeyword.props[PROP_SRC];
+        NSURL *URL = [NSURL URLWithString:urlString];
+        [[SDWebImageDownloader sharedDownloader]
+         downloadImageWithURL:URL
+         options:0
+         progress:nil
+         completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, BOOL finished) {
+             dispatch_async(dispatch_get_main_queue(), ^{
+                [self replaceWebImage:image withKeyword:imageKeyword];
+             });
+         }];
+    }
+    
     return str;
 }
 
 -(void)insertKeyword:(KeyWordModel *)keyword{
     
-    if (keyword.props[@"type"] == nil) {
+    if (keyword.props[PROP_EL_TYPE] == nil) {
         return;
     }
-    NSInteger keyword_type = [keyword.props[@"type"] integerValue];
+    NSInteger keyword_type = [keyword.props[PROP_EL_TYPE] integerValue];
     
     // 1、获取插入的位置
     NSRange range = self.textView.selectedRange;
@@ -93,10 +119,6 @@
     
 }
 
--(NSString *)getRichText{
-    return _richString;
-}
-
 #pragma mark - private
 -(NSAttributedString *)insertKeyWord:(KeyWordModel *)keyWord atRange:(NSRange)range{
     if (!_editor) {
@@ -107,14 +129,27 @@
     // 更新富文本
     [_editor insertKeyWord:keyWord
                    atRange:range
-                  richText:_richString
                      block:^(NSString *newrichText, NSAttributedString *keywordAttributed,NSRange keywordRange) {
-        _richString = newrichText;
         _attributed = keywordAttributed;
     }];
     // 返回用于渲染的富文本
     return _attributed;
 
+}
+
+-(void)replaceWebImage:(UIImage *)image withKeyword:(KeyWordModel *)keyword{
+    NSLog(@"图片位置%@",[NSValue valueWithRange:keyword.tempRange]);
+    RichTextEidtor *editor = [[RichTextEidtor alloc]init];
+    editor.imageMaxWidth = _imageMaxWidth;
+    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:keyword.props];
+    dic[PROP_IMAGE] = image;
+    keyword.props = dic;
+    NSMutableAttributedString *mutable_ats = [[NSMutableAttributedString alloc]initWithAttributedString:self.textView.attributedText];
+//    NSAttributedString *sf = [mutable_ats attributedSubstringFromRange:keyword.tempRange];
+    
+    NSAttributedString *attr =  [editor getImageAttributedStringWithKeyword:keyword];
+    [mutable_ats replaceCharactersInRange:keyword.tempRange withAttributedString:attr];
+    self.textView.attributedText = mutable_ats;
 }
 
 #pragma mark - 更新关键字位置
@@ -123,7 +158,7 @@
     _replaceRange = range;
 }
 -(void)update{
-    _selectedRange = self.textView.selectedRange;
+   NSRange _selectedRange = self.textView.selectedRange;
     bool isChinese;//判断当前输入法是否是中文
     
     if ([[[self.textView textInputMode] primaryLanguage]  isEqualToString: @"en-US"]) {
@@ -221,7 +256,7 @@
         
         // 更新已编辑的关键字样式
         [mutable_attributed addAttributes:[RichTextStyle getNormalTextAttributed] range:editRange];
-        if ([editKeyword.props[@"type"] integerValue] != 3) {
+        if ([editKeyword.props[PROP_EL_TYPE] integerValue] != 3) {
             [mutable_attributed removeAttribute:NSLinkAttributeName range:editRange];
         }
     }
@@ -235,7 +270,7 @@
     for (KeyWordModel *keyword in _invalidKeywords) {
         NSRange range = keyword.tempRange;
         NSLog(@"重新渲染的关键字 -----> %@",[NSValue valueWithRange:range]);
-        if ([keyword.props[@"type"] integerValue] != 3) {
+        if ([keyword.props[PROP_EL_TYPE] integerValue] != 3) {
             [mutable_attributed setAttributes:[RichTextStyle getNormalTextAttributed] range:range];
         }else{
         }

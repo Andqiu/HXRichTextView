@@ -8,35 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		49C9AD7FD9C38BE82ED45F5B /* Pods_HXRichText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DB17DF4C6D78FA8D7431F13 /* Pods_HXRichText.framework */; };
-		E92A15E21FC3D59100AB9D7C /* HXTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = E92A15E11FC3D59100AB9D7C /* HXTextView.m */; };
-		E92A15E51FC3FD1B00AB9D7C /* RichTextEidtor.m in Sources */ = {isa = PBXBuildFile; fileRef = E92A15E41FC3FD1B00AB9D7C /* RichTextEidtor.m */; };
-		E9548E811FC27F7B00258F57 /* KeyWordModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E9548E801FC27F7B00258F57 /* KeyWordModel.m */; };
-		E971C2181FBEC7A00018002A /* RichTextParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E971C2171FBEC7A00018002A /* RichTextParser.m */; };
 		E97DB2311FBC4B3900CB05EE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E97DB2301FBC4B3900CB05EE /* AppDelegate.m */; };
 		E97DB2341FBC4B3900CB05EE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E97DB2331FBC4B3900CB05EE /* ViewController.m */; };
 		E97DB2371FBC4B3900CB05EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E97DB2351FBC4B3900CB05EE /* Main.storyboard */; };
 		E97DB2391FBC4B3900CB05EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E97DB2381FBC4B3900CB05EE /* Assets.xcassets */; };
 		E97DB23C1FBC4B3900CB05EE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E97DB23A1FBC4B3900CB05EE /* LaunchScreen.storyboard */; };
 		E97DB23F1FBC4B3900CB05EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E97DB23E1FBC4B3900CB05EE /* main.m */; };
-		E97DB2481FBC4C1D00CB05EE /* HXRichTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E97DB2471FBC4C1D00CB05EE /* HXRichTextManager.m */; };
-		E9A183D71FC660EA00DA29C6 /* RichTextStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = E9A183D61FC660EA00DA29C6 /* RichTextStyle.m */; };
 		E9ED6B191FC7B77300CE9988 /* KeyBoardComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = E9ED6B181FC7B1AD00CE9988 /* KeyBoardComponent.m */; };
 		E9ED6B1C1FC7BE1A00CE9988 /* RichToolView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9ED6B1B1FC7BE1A00CE9988 /* RichToolView.xib */; };
 		E9ED6B1F1FC7BECC00CE9988 /* RichToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9ED6B1E1FC7BECC00CE9988 /* RichToolView.m */; };
+		E9FC26EE1FEA333F001C0F81 /* HXRichTextView in Resources */ = {isa = PBXBuildFile; fileRef = E9FC26ED1FEA333E001C0F81 /* HXRichTextView */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		6D5584AF90D5C71DF96645CA /* Pods-HXRichText.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HXRichText.release.xcconfig"; path = "Pods/Target Support Files/Pods-HXRichText/Pods-HXRichText.release.xcconfig"; sourceTree = "<group>"; };
 		6DB17DF4C6D78FA8D7431F13 /* Pods_HXRichText.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HXRichText.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E858466812763BACDB4479FD /* Pods-HXRichText.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HXRichText.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HXRichText/Pods-HXRichText.debug.xcconfig"; sourceTree = "<group>"; };
-		E92A15E01FC3D59100AB9D7C /* HXTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXTextView.h; sourceTree = "<group>"; };
-		E92A15E11FC3D59100AB9D7C /* HXTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HXTextView.m; sourceTree = "<group>"; };
-		E92A15E31FC3FD1A00AB9D7C /* RichTextEidtor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RichTextEidtor.h; sourceTree = "<group>"; };
-		E92A15E41FC3FD1B00AB9D7C /* RichTextEidtor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RichTextEidtor.m; sourceTree = "<group>"; };
-		E9548E7F1FC27F7B00258F57 /* KeyWordModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyWordModel.h; sourceTree = "<group>"; };
-		E9548E801FC27F7B00258F57 /* KeyWordModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeyWordModel.m; sourceTree = "<group>"; };
-		E971C2161FBEC7A00018002A /* RichTextParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RichTextParser.h; sourceTree = "<group>"; };
-		E971C2171FBEC7A00018002A /* RichTextParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RichTextParser.m; sourceTree = "<group>"; };
 		E97DB22C1FBC4B3900CB05EE /* HXRichText.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HXRichText.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E97DB22F1FBC4B3900CB05EE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E97DB2301FBC4B3900CB05EE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -47,16 +34,13 @@
 		E97DB23B1FBC4B3900CB05EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E97DB23D1FBC4B3900CB05EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E97DB23E1FBC4B3900CB05EE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		E97DB2461FBC4C1D00CB05EE /* HXRichTextManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXRichTextManager.h; sourceTree = "<group>"; };
-		E97DB2471FBC4C1D00CB05EE /* HXRichTextManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HXRichTextManager.m; sourceTree = "<group>"; };
-		E9A183D51FC660EA00DA29C6 /* RichTextStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RichTextStyle.h; sourceTree = "<group>"; };
-		E9A183D61FC660EA00DA29C6 /* RichTextStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RichTextStyle.m; sourceTree = "<group>"; };
 		E9A183D81FC66D0300DA29C6 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
 		E9ED6B171FC7B1AD00CE9988 /* KeyBoardComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyBoardComponent.h; sourceTree = "<group>"; };
 		E9ED6B181FC7B1AD00CE9988 /* KeyBoardComponent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeyBoardComponent.m; sourceTree = "<group>"; };
 		E9ED6B1B1FC7BE1A00CE9988 /* RichToolView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RichToolView.xib; sourceTree = "<group>"; };
 		E9ED6B1D1FC7BECC00CE9988 /* RichToolView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RichToolView.h; sourceTree = "<group>"; };
 		E9ED6B1E1FC7BECC00CE9988 /* RichToolView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RichToolView.m; sourceTree = "<group>"; };
+		E9FC26ED1FEA333E001C0F81 /* HXRichTextView */ = {isa = PBXFileReference; lastKnownFileType = folder; path = HXRichTextView; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,7 +93,7 @@
 		E97DB22E1FBC4B3900CB05EE /* HXRichText */ = {
 			isa = PBXGroup;
 			children = (
-				E98958611FE0C5BE00B6466C /* HXRichTextView */,
+				E9FC26ED1FEA333E001C0F81 /* HXRichTextView */,
 				E97DB2451FBC4BF400CB05EE /* tool */,
 				E97DB22F1FBC4B3900CB05EE /* AppDelegate.h */,
 				E97DB2301FBC4B3900CB05EE /* AppDelegate.m */,
@@ -132,33 +116,6 @@
 				E9ED6B161FC7B1AD00CE9988 /* KeyboardComponent */,
 			);
 			path = tool;
-			sourceTree = "<group>";
-		};
-		E98958611FE0C5BE00B6466C /* HXRichTextView */ = {
-			isa = PBXGroup;
-			children = (
-				E98958621FE0C5E800B6466C /* model */,
-				E97DB2461FBC4C1D00CB05EE /* HXRichTextManager.h */,
-				E97DB2471FBC4C1D00CB05EE /* HXRichTextManager.m */,
-				E971C2161FBEC7A00018002A /* RichTextParser.h */,
-				E971C2171FBEC7A00018002A /* RichTextParser.m */,
-				E92A15E31FC3FD1A00AB9D7C /* RichTextEidtor.h */,
-				E92A15E41FC3FD1B00AB9D7C /* RichTextEidtor.m */,
-				E92A15E01FC3D59100AB9D7C /* HXTextView.h */,
-				E92A15E11FC3D59100AB9D7C /* HXTextView.m */,
-				E9A183D51FC660EA00DA29C6 /* RichTextStyle.h */,
-				E9A183D61FC660EA00DA29C6 /* RichTextStyle.m */,
-			);
-			path = HXRichTextView;
-			sourceTree = "<group>";
-		};
-		E98958621FE0C5E800B6466C /* model */ = {
-			isa = PBXGroup;
-			children = (
-				E9548E7F1FC27F7B00258F57 /* KeyWordModel.h */,
-				E9548E801FC27F7B00258F57 /* KeyWordModel.m */,
-			);
-			path = model;
 			sourceTree = "<group>";
 		};
 		E9ED6B161FC7B1AD00CE9988 /* KeyboardComponent */ = {
@@ -245,6 +202,7 @@
 				E97DB23C1FBC4B3900CB05EE /* LaunchScreen.storyboard in Resources */,
 				E97DB2391FBC4B3900CB05EE /* Assets.xcassets in Resources */,
 				E97DB2371FBC4B3900CB05EE /* Main.storyboard in Resources */,
+				E9FC26EE1FEA333F001C0F81 /* HXRichTextView in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,17 +267,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E97DB2481FBC4C1D00CB05EE /* HXRichTextManager.m in Sources */,
-				E9A183D71FC660EA00DA29C6 /* RichTextStyle.m in Sources */,
 				E9ED6B191FC7B77300CE9988 /* KeyBoardComponent.m in Sources */,
 				E97DB2341FBC4B3900CB05EE /* ViewController.m in Sources */,
 				E97DB23F1FBC4B3900CB05EE /* main.m in Sources */,
 				E97DB2311FBC4B3900CB05EE /* AppDelegate.m in Sources */,
-				E92A15E51FC3FD1B00AB9D7C /* RichTextEidtor.m in Sources */,
-				E92A15E21FC3D59100AB9D7C /* HXTextView.m in Sources */,
 				E9ED6B1F1FC7BECC00CE9988 /* RichToolView.m in Sources */,
-				E971C2181FBEC7A00018002A /* RichTextParser.m in Sources */,
-				E9548E811FC27F7B00258F57 /* KeyWordModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

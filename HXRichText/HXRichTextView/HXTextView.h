@@ -19,7 +19,7 @@
  */
 @property (nonatomic, strong) UIView *keyboradToolView;
 
--(NSString *)getCurrentRichText;
+-(NSArray<KeyWordModel *> *)getImageKeywords;
 
 /**
  设置富文本

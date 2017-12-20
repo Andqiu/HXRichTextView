@@ -1,0 +1,6 @@
+framework module Pods_HXRichText {
+  umbrella header "Pods-HXRichText-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -15,10 +15,13 @@
 @implementation RichTextParser
 {
     NSInteger _keyCount;
+    
     // 源字符串
     NSString *_originString;
+    
     // 回调
     void(^_resultBlock)(NSAttributedString *result);
+    
     // xml解析器
     NSMutableArray *_xmlParsers;
   
@@ -51,15 +54,14 @@
         keyword.originString = [_originString substringWithRange:range];
         keyword.kid = i;
         [_datas addObject:keyword];
+
         
         NSXMLParser *xmlparser = [[NSXMLParser alloc]initWithData:[keyword.originString dataUsingEncoding:NSUTF8StringEncoding]];
         [_xmlParsers addObject:xmlparser];
         xmlparser.delegate = self;
         [xmlparser parse];
     }
-    [_xmlParsers removeAllObjects];
-    // 转换关键字
-    [self replaceText];
+    
 #ifdef DEBUG
     for (int i =0;i<_datas.count;i++) {
         KeyWordModel * model = _datas[i];
@@ -67,6 +69,20 @@
         NSLog(@"原始：%@",[NSValue valueWithRange:rang]);
     }
 #endif
+    
+    [_xmlParsers removeAllObjects];
+    
+    // 转换关键字
+    [self replaceText];
+    
+#ifdef DEBUG
+    for (int i =0;i<_datas.count;i++) {
+        KeyWordModel * model = _datas[i];
+        NSRange rang = model.tempRange;
+        NSLog(@"替换后：%@",[NSValue valueWithRange:rang]);
+    }
+#endif
+
 }
 
 //注意* NSXMLParser 解析是同步的，所以可以不用block回调（待修正）
@@ -78,20 +94,19 @@
         KeyWordModel *model = _datas[i];
         NSRange rang = model.tempRange;
         NSDictionary *obj = model.props;
-        if ([obj[@"type"] integerValue] == 3) {
+        if ([obj[PROP_EL_TYPE] integerValue] == 3) {
             // 图片类型
             RichTextEidtor *eidtor = [[RichTextEidtor alloc]init];
             eidtor.imageMaxWidth = _imageMaxWidth;
             [eidtor insertKeyWord:model
                           atRange:rang
-                         richText:_originString
                             block:^(NSString *newrichText, NSAttributedString *attributed,NSRange keywordRange) {
                 [str replaceCharactersInRange:rang withAttributedString:attributed];
                 // 更新此处关键字之后所有的关键字的Range
                 for (NSInteger k = i + 1;k<_datas.count; k++) {
                     KeyWordModel *o_model = _datas[k];
                     NSRange o_range = o_model.tempRange;
-                    o_range.location = o_range.location - model.originString.length + 1;
+                    o_range.location = o_range.location - model.originString.length + 2;
                     o_model.tempRange = o_range;
                 }
             }];
@@ -103,14 +118,13 @@
             eidtor.imageMaxWidth = _imageMaxWidth;
             [eidtor insertKeyWord:model
                           atRange:rang
-                         richText:_originString
                             block:^(NSString *newrichText, NSAttributedString *attributed,NSRange keywordRange) {
                                 [str replaceCharactersInRange:rang withAttributedString:attributed];
                                 // 更新此处关键字之后所有的关键字的Range
                                 for (NSInteger k = i + 1;k<_datas.count; k++) {
                                     KeyWordModel *o_model = _datas[k];
                                     NSRange o_range = o_model.tempRange;
-                                    o_range.location = o_range.location - model.originString.length + attributed.length;
+                                    o_range.location = o_range.location - model.originString.length + attributed.length + 1;
                                     o_model.tempRange = o_range;
                                 }
                             }];
@@ -120,6 +134,38 @@
         _resultBlock(str);
     }
 }
+
+-(NSString *)replaceParserString:(NSAttributedString *)str withKeywords:(NSArray *)keywords{
+    NSMutableAttributedString *mu_str = [[NSMutableAttributedString alloc]initWithAttributedString:str];
+    for (NSInteger i = keywords.count-1;i>=0;i--) {
+        KeyWordModel *keyword = keywords[i];
+        NSString *el_string = [RichTextParser keyWordDescription:keyword];
+        NSAttributedString *el_ats = [[NSAttributedString alloc]initWithString:el_string attributes:nil];
+        [mu_str replaceCharactersInRange:keyword.tempRange withAttributedString:el_ats];
+    }
+    
+    return mu_str.string;
+}
+
++(NSString *)keyWordDescription:(KeyWordModel *)keyword{
+    
+    NSString *propsDescription = @"";
+    for (NSString *key in  keyword.props) {
+        if (![key isEqual: PROP_IMAGE]) {
+            propsDescription = [NSString stringWithFormat:@"%@ %@='%@'",propsDescription,key,keyword.props[key]];
+        }
+    }
+    
+    if ([keyword.props[PROP_EL_TYPE] integerValue] == KeywordTypeImage) {
+        NSString *str = [NSString stringWithFormat:@"<%@%@></%@>",IMG_TAG,propsDescription,IMG_TAG];
+        return str;
+    }else{
+        NSString *content = keyword.content;
+        NSString *str = [NSString stringWithFormat:@"<%@%@>%@</%@>",LINK_TAG,propsDescription,content,LINK_TAG];
+        return str;
+    }
+}
+
 
 #pragma mark - XMLParser delegate
 - (void)parserDidStartDocument:(NSXMLParser *)parser{

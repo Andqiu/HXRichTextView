@@ -64,8 +64,15 @@
 }
 
 #pragma mark - public
--(NSString *)getCurrentRichText{
-    return [_textManger getRichText];;
+-(NSArray<KeyWordModel *>  *)getImageKeywords{
+    NSMutableArray *arr = [NSMutableArray array];
+    for (KeyWordModel *keyword in _textManger.keyWords) {
+        UIImage *image = keyword.props[PROP_IMAGE];
+        if (image && [keyword.props[PROP_SRC] length] < 1) {
+            [arr addObject:keyword];
+        }
+    }
+    return arr;
 }
 //-(void)insertImage:(NSString *)imageNamed{
 //    
@@ -176,13 +183,13 @@
     for (KeyWordModel *keyword in _textManger.parser.datas) {
         NSRange range = keyword.tempRange;
         if (range.location == 0 && range.length == 0) {
-            if ([keyword.props[@"type"] integerValue] != 3) {
+            if ([keyword.props[PROP_EL_TYPE] integerValue] != 3) {
                 
             }else{
                 
             }
         }else{
-            if ([keyword.props[@"type"] integerValue] != 3) {
+            if ([keyword.props[PROP_EL_TYPE] integerValue] != 3) {
                 [mutable_attributed addAttributes:[self linkTextAttributed] range:range];
                 self.attributedText = mutable_attributed;
                 self.selectedRange = _selectedRange;

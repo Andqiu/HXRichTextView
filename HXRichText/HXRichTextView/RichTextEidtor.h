@@ -18,11 +18,11 @@
 
  @param keyWord 关键字对象
  @param range 位置
- @param richText 富文本
  @param block 回调
  */
 -(void)insertKeyWord:(KeyWordModel *)keyWord
              atRange:(NSRange)range
-            richText:(NSString *)richText
                block:(void(^)(NSString *newrichText,NSAttributedString *keywordAttributed,NSRange keywordRange))block;
+
+-(NSAttributedString *)getImageAttributedStringWithKeyword:(KeyWordModel *)keyWord;
 @end
