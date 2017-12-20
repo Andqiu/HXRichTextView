@@ -15,11 +15,10 @@
 @property (nonatomic, copy) void(^didClickKeywordBlock)(KeyWordModel *keyword);
 
 /**
- 返回键盘辅助工具栏
+ 键盘辅助工具栏
  */
 @property (nonatomic, strong) UIView *keyboradToolView;
 
--(NSArray<KeyWordModel *> *)getImageKeywords;
 
 /**
  设置富文本

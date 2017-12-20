@@ -20,7 +20,7 @@
 
 }
 
-static NSString *richString = @"不同领域、不同层次的人，<HX_LINK type='1' src='www.baidu.com'>@我们</HX_LINK>对需求的描述方式都是不同的。仅仅是通过别人对需求的描述实际上很\
+static NSString *richString = @"不同领域、不同层次的人，<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK>对需求的描述方式都是不同的。仅仅是通过别人对需求的描述实际上很\
 ";
 - (void)viewDidLoad {
     
@@ -32,20 +32,23 @@ static NSString *richString = @"不同领域、不同层次的人，<HX_LINK typ
                 KeyWordModel *keyword = [[KeyWordModel alloc]init];
                 keyword.kid = _richTextView.textManger.keyWords.count;
                 keyword.content = [NSString stringWithFormat:@"@我是你大爷"];
-                keyword.props = @{@"uid":@(123),@"type":@(KeywordTypeUser)};
+                keyword.props = @{PROP_UID:@(123),PROP_EL_TYPE:@(KeywordTypeUser)};
                 [_richTextView.textManger insertKeyword:keyword];
 
             }
                 break;
             case 1:{
                 KeyWordModel *keyword = [[KeyWordModel alloc]init];
-                keyword.props = @{@"src":@"test",@"type":@(KeywordTypeImage),@"width":@(512),@"height":@(384)};
+                keyword.props = @{PROP_IMAGE:[UIImage imageNamed:@"test"],PROP_EL_TYPE:@(KeywordTypeImage),PROP_WIDTH:@(512),PROP_HEIGHT:@(200)};
                 keyword.kid = _richTextView.textManger.keyWords.count;
                 [_richTextView.textManger insertKeyword:keyword];
 
             }
                 break;
             case 2:
+                break;
+            case 3:
+                [self export];
                 break;
                 
             default:
@@ -64,7 +67,20 @@ static NSString *richString = @"不同领域、不同层次的人，<HX_LINK typ
 
 
 -(void)export{
-    NSString *richText = [_richTextView getCurrentRichText];
+    
+    // 将关键字位置排序
+    [_richTextView.textManger.keyWords sortUsingComparator:^NSComparisonResult(KeyWordModel * obj1, KeyWordModel* obj2) {
+        if (obj1.tempRange.location < obj2.tempRange.location) {
+            return NSOrderedAscending;
+        }else{
+            return NSOrderedDescending;
+        }
+    }];
+    // 若关键字内有本地图片要上传，请先上传后将地址替换
+    NSString *richText = [_richTextView.textManger.parser
+                          replaceParserString:_richTextView.attributedText
+                          withKeywords:_richTextView.textManger.keyWords];
+    
     NSLog(@"%@",richText);
 }
 

@@ -12,16 +12,16 @@
 #define RICH_SCHEME @"hx_rich_scheme"
 
 // 标签属性
-#define PROP_WIDTH @"width"
-#define PROP_HEIGHT @"height"
-#define PROP_SRC @"src"
-#define PROP_EL_TYPE @"el_type"
-#define PROP_TYPE @"type"
-#define PROP_UID @"uid"
-#define PROP_PID @"pid"
-#define PROP_NAME @"name"
-#define PROP_URL @"url"
-#define PROP_IMAGE @"image"
+#define PROP_WIDTH @"width"   // 图片宽度
+#define PROP_HEIGHT @"height"   // 图片高度
+#define PROP_SRC @"src" // 链接地址
+#define PROP_EL_TYPE @"el_type" // 标签类型
+#define PROP_TYPE @"type"  // 用户类型
+#define PROP_UID @"uid"  // 用户id
+#define PROP_PID @"pid"  // 产品id
+#define PROP_NAME @"name"  // 用户/产品名称
+#define PROP_URL @"url" // 图片地址
+#define PROP_IMAGE @"image" // 图片UIImage实例
 
 typedef  NS_ENUM(NSInteger,KeywordType){
     KeywordTypeLink = 0,

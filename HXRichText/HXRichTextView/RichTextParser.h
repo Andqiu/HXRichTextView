@@ -36,7 +36,7 @@
  替换富文本中的关键字
 
  @param str 渲染的富文本
- @param imageKeywords 关键字数组
+ @param keywords 关键字数组
  @return 关键字文本
  */
 -(NSString *)replaceParserString:(NSAttributedString *)str withKeywords:(NSArray *)keywords;

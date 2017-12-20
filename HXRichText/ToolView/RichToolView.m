@@ -29,6 +29,11 @@
         _clickBlock(0);
     }
 }
+- (IBAction)export:(UIButton *)sender {
+    if (_clickBlock) {
+        _clickBlock(3);
+    }
+}
 
 -(void)dealloc{
     NSLog(@"----> RichToolView instance dealloc");

@@ -8,6 +8,7 @@
 
 #import "HXRichTextManager.h"
 #import "RichTextStyle.h"
+#import "SDWebImageDownloader.h"
 
 @implementation HXRichTextManager{
     

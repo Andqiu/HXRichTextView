@@ -64,16 +64,16 @@
 }
 
 #pragma mark - public
--(NSArray<KeyWordModel *>  *)getImageKeywords{
-    NSMutableArray *arr = [NSMutableArray array];
-    for (KeyWordModel *keyword in _textManger.keyWords) {
-        UIImage *image = keyword.props[PROP_IMAGE];
-        if (image && [keyword.props[PROP_SRC] length] < 1) {
-            [arr addObject:keyword];
-        }
-    }
-    return arr;
-}
+//-(NSArray<KeyWordModel *>  *)getImageKeywords{
+//    NSMutableArray *arr = [NSMutableArray array];
+//    for (KeyWordModel *keyword in _textManger.keyWords) {
+//        UIImage *image = keyword.props[PROP_IMAGE];
+//        if (image && [keyword.props[PROP_SRC] length] < 1) {
+//            [arr addObject:keyword];
+//        }
+//    }
+//    return arr;
+//}
 //-(void)insertImage:(NSString *)imageNamed{
 //    
 //    KeyWordModel *keyword = [[KeyWordModel alloc]init];
