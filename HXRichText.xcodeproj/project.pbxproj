@@ -23,7 +23,7 @@
 		E9FC27061FEA34C1001C0F81 /* HXRichTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E9FC27001FEA34C1001C0F81 /* HXRichTextManager.m */; };
 		E9FC27071FEA34C1001C0F81 /* RichTextEidtor.m in Sources */ = {isa = PBXBuildFile; fileRef = E9FC27011FEA34C1001C0F81 /* RichTextEidtor.m */; };
 		E9FC27081FEA34C1001C0F81 /* RichTextStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = E9FC27021FEA34C1001C0F81 /* RichTextStyle.m */; };
-		E9FC270A1FEA3C47001C0F81 /* demo.gif in Resources */ = {isa = PBXBuildFile; fileRef = E9FC27091FEA3C47001C0F81 /* demo.gif */; };
+		E9FC270D1FEA3D26001C0F81 /* demo.gif in Resources */ = {isa = PBXBuildFile; fileRef = E9FC270C1FEA3D26001C0F81 /* demo.gif */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,7 +57,7 @@
 		E9FC27001FEA34C1001C0F81 /* HXRichTextManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXRichTextManager.m; sourceTree = "<group>"; };
 		E9FC27011FEA34C1001C0F81 /* RichTextEidtor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RichTextEidtor.m; sourceTree = "<group>"; };
 		E9FC27021FEA34C1001C0F81 /* RichTextStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RichTextStyle.m; sourceTree = "<group>"; };
-		E9FC27091FEA3C47001C0F81 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = demo.gif; path = ../../demo.gif; sourceTree = "<group>"; };
+		E9FC270C1FEA3D26001C0F81 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,8 +119,8 @@
 				E97DB2351FBC4B3900CB05EE /* Main.storyboard */,
 				E9ED6B201FC7C17E00CE9988 /* ToolView */,
 				E97DB2381FBC4B3900CB05EE /* Assets.xcassets */,
-				E9FC27091FEA3C47001C0F81 /* demo.gif */,
 				E97DB23A1FBC4B3900CB05EE /* LaunchScreen.storyboard */,
+				E9FC270C1FEA3D26001C0F81 /* demo.gif */,
 				E97DB23D1FBC4B3900CB05EE /* Info.plist */,
 				E97DB23E1FBC4B3900CB05EE /* main.m */,
 			);
@@ -244,8 +244,8 @@
 			files = (
 				E9ED6B1C1FC7BE1A00CE9988 /* RichToolView.xib in Resources */,
 				E97DB23C1FBC4B3900CB05EE /* LaunchScreen.storyboard in Resources */,
-				E9FC270A1FEA3C47001C0F81 /* demo.gif in Resources */,
 				E97DB2391FBC4B3900CB05EE /* Assets.xcassets in Resources */,
+				E9FC270D1FEA3D26001C0F81 /* demo.gif in Resources */,
 				E97DB2371FBC4B3900CB05EE /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
