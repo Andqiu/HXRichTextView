@@ -10,7 +10,7 @@
 #import "HXTextView.h"
 #import "RichToolView.h"
 
-@interface ViewController ()
+@interface ViewController ()<NSTextStorageDelegate>
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @end
 
@@ -20,7 +20,7 @@
 
 }
 
-static NSString *richString = @"不同领域、不同层次的人，<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK>对需求的描述方式都是不同的。仅仅是通过别人对需求的描述实际上很\
+static NSString *richString = @"不同领域、不同层次的人，<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK><HX_IMG el_type='3' src='test' width='375' height='50'></HX_IMG>对需求的描述方式都是不同的。仅仅是通过别人对需求的描述实际上很\
 ";
 - (void)viewDidLoad {
     
@@ -58,11 +58,27 @@ static NSString *richString = @"不同领域、不同层次的人，<HX_LINK el_
     
     _richTextView = [[HXTextView alloc]initWithFrame:CGRectMake(0, 64, 375, 500)];
     _richTextView.keyboradToolView = v;
-    [self.view addSubview:_richTextView];
+//    [self.view addSubview:_richTextView];
     [_richTextView setRichText:richString];
     _richTextView.didClickKeywordBlock = ^(KeyWordModel *keyword) {
         NSLog(@"-----> %ld-,%@",keyword.kid,keyword.standardString);
     };
+    
+    NSTextContainer *textContainer = [[NSTextContainer alloc]initWithSize:CGSizeMake(375, 700)];
+    NSLayoutManager *layoutManager = [[NSLayoutManager alloc]init];
+    [layoutManager addTextContainer:textContainer];
+    
+    NSTextStorage *textStorage = [[NSTextStorage alloc]initWithAttributedString:_richTextView.attributedText];
+    textStorage.delegate = self;
+    [textStorage addLayoutManager:layoutManager];
+    
+    UITextView *textView = [[UITextView alloc]initWithFrame:CGRectMake(0, 0, 375, 700) textContainer:textContainer];
+    [self.view addSubview:textView];
+
+}
+
+-(void)textStorage:(NSTextStorage *)textStorage willProcessEditing:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta{
+    NSLog(@"%@",[NSValue valueWithRange:editedRange]);
 }
 
 
