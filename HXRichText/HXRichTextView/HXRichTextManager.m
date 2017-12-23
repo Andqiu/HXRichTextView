@@ -97,24 +97,21 @@
     [self setReplaceString:(keyword_type != KeywordTypeImage)?keyword.content:@"" replaceRange:range];
     
     // 3、更新已经存在的关键字位置 并修改插入部分的样式
-    NSMutableAttributedString *mutable_ats = [self updateKeyRangsWithOffSet:(keyword_type != KeywordTypeImage)?(keyword.content.length+1):2 textDidChange:NO];
+    [self updateKeyRangsWithOffSet:(keyword_type != KeywordTypeImage)?(keyword.content.length+1):2 textDidChange:NO];
     
     // 4、获取渲染关键字富文本
     NSAttributedString *keyword_ast = [self insertKeyWord:keyword atRange:range];
     
     // 5、将富文本插入到当前位置中
-    [mutable_ats replaceCharactersInRange:range withAttributedString:keyword_ast];
+    [self.textView.textStorage replaceCharactersInRange:range withAttributedString:keyword_ast];
     
-    // 6、更新textView文本
-    self.textView.attributedText = mutable_ats;
-    
-    // 7、将即将插入的关键放入关键字容器中
+    // 6、将即将插入的关键放入关键字容器中
     [_keyWords addObject:keyword];
     
-    // 8、 更新
-    _latestString = self.textView.attributedText;
+    // 7、 更新
+    _latestString = self.textView.textStorage;
     
-    // 9、更新光标位置
+    // 8、更新光标位置
     self.textView.selectedRange = NSMakeRange(keyword.tempRange.location+keyword.tempRange.length, 0);//NSMakeRange((range.location + (keyword.content.length<=0?(1+2):keyword.content.length + 2)), 0);
     [self.textView scrollRangeToVisible:self.textView.selectedRange];
     
@@ -145,12 +142,9 @@
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:keyword.props];
     dic[PROP_IMAGE] = image;
     keyword.props = dic;
-    NSMutableAttributedString *mutable_ats = [[NSMutableAttributedString alloc]initWithAttributedString:self.textView.attributedText];
-//    NSAttributedString *sf = [mutable_ats attributedSubstringFromRange:keyword.tempRange];
     
     NSAttributedString *attr =  [editor getImageAttributedStringWithKeyword:keyword];
-    [mutable_ats replaceCharactersInRange:keyword.tempRange withAttributedString:attr];
-    self.textView.attributedText = mutable_ats;
+    [self.textView.textStorage replaceCharactersInRange:keyword.tempRange withAttributedString:attr];
 }
 
 #pragma mark - 更新关键字位置
@@ -175,24 +169,22 @@
         UITextPosition *position = [ self.textView positionFromPosition:selectedRange.start offset:0];
         // 没有高亮选择的字，则对已输入的文字进行字数统计和限制
         if (!position) {            
-           NSMutableAttributedString *mutable_ats =  [self updateKeyRangsWithOffSet:self.textView.text.length - _latestString.length textDidChange:YES];
-            self.textView.attributedText = mutable_ats;
-            _latestString = mutable_ats;
+           [self updateKeyRangsWithOffSet:self.textView.text.length - _latestString.length textDidChange:YES];
+            _latestString = self.textView.textStorage;
         }else{
             
         }
     }else{
         
         // 英文输入法下
-       NSMutableAttributedString *mutable_ats = [self updateKeyRangsWithOffSet:self.textView.text.length - _latestString.length textDidChange:YES];
-        self.textView.attributedText = mutable_ats;
-        _latestString = mutable_ats;
+       [self updateKeyRangsWithOffSet:self.textView.text.length - _latestString.length textDidChange:YES];
+        _latestString = self.textView.textStorage;
     }
     self.textView.selectedRange = _selectedRange;
     [self.textView scrollRangeToVisible:self.textView.selectedRange];
 }
 
--(NSMutableAttributedString *)updateKeyRangsWithOffSet:(NSInteger)offset textDidChange:(BOOL)didChange{
+-(void)updateKeyRangsWithOffSet:(NSInteger)offset textDidChange:(BOOL)didChange{
     NSRange editRange = NSMakeRange(0, 0);
     KeyWordModel *editKeyword = nil;
     
@@ -248,36 +240,17 @@
             }
         }
     }
-    
-    NSMutableAttributedString *mutable_attributed = self.textView.attributedText.mutableCopy;
 
     if (editKeyword) {
         [_invalidKeywords addObject:editKeyword];
         [_keyWords removeObject:editKeyword];
         
         // 更新已编辑的关键字样式
-        [mutable_attributed addAttributes:[RichTextStyle getNormalTextAttributed] range:editRange];
+        [self.textView.textStorage addAttributes:[RichTextStyle getNormalTextAttributed] range:editRange];
         if ([editKeyword.props[PROP_EL_TYPE] integerValue] != 3) {
-            [mutable_attributed removeAttribute:NSLinkAttributeName range:editRange];
+            [self.textView.textStorage removeAttribute:NSLinkAttributeName range:editRange];
         }
     }
-    return mutable_attributed;
-}
-
--(void)updateTextViewStyle{
-    
-    NSMutableAttributedString *mutable_attributed = self.textView.attributedText.mutableCopy;
-    [mutable_attributed addAttributes:[RichTextStyle getNormalTextAttributed] range:NSMakeRange(0, mutable_attributed.length)];
-    for (KeyWordModel *keyword in _invalidKeywords) {
-        NSRange range = keyword.tempRange;
-        NSLog(@"重新渲染的关键字 -----> %@",[NSValue valueWithRange:range]);
-        if ([keyword.props[PROP_EL_TYPE] integerValue] != 3) {
-            [mutable_attributed setAttributes:[RichTextStyle getNormalTextAttributed] range:range];
-        }else{
-        }
-    }
-    self.textView.attributedText = mutable_attributed;
-
 }
 
 @end

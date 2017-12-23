@@ -58,29 +58,13 @@ static NSString *richString = @"不同领域、不同层次的人，<HX_LINK el_
     
     _richTextView = [[HXTextView alloc]initWithFrame:CGRectMake(0, 64, 375, 500)];
     _richTextView.keyboradToolView = v;
-//    [self.view addSubview:_richTextView];
+    [self.view addSubview:_richTextView];
     [_richTextView setRichText:richString];
     _richTextView.didClickKeywordBlock = ^(KeyWordModel *keyword) {
         NSLog(@"-----> %ld-,%@",keyword.kid,keyword.standardString);
     };
-    
-    NSTextContainer *textContainer = [[NSTextContainer alloc]initWithSize:CGSizeMake(375, 700)];
-    NSLayoutManager *layoutManager = [[NSLayoutManager alloc]init];
-    [layoutManager addTextContainer:textContainer];
-    
-    NSTextStorage *textStorage = [[NSTextStorage alloc]initWithAttributedString:_richTextView.attributedText];
-    textStorage.delegate = self;
-    [textStorage addLayoutManager:layoutManager];
-    
-    UITextView *textView = [[UITextView alloc]initWithFrame:CGRectMake(0, 0, 375, 700) textContainer:textContainer];
-    [self.view addSubview:textView];
 
 }
-
--(void)textStorage:(NSTextStorage *)textStorage willProcessEditing:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta{
-    NSLog(@"%@",[NSValue valueWithRange:editedRange]);
-}
-
 
 -(void)export{
     
