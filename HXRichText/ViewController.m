@@ -10,7 +10,7 @@
 #import "HXTextView.h"
 #import "RichToolView.h"
 
-@interface ViewController ()
+@interface ViewController ()<NSTextStorageDelegate>
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 @end
 
@@ -20,7 +20,7 @@
 
 }
 
-static NSString *richString = @"不同领域、不同层次的人，<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK>对需求的描述方式都是不同的。仅仅是通过别人对需求的描述实际上很\
+static NSString *richString = @"不同领域、不同层次的人，<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK><HX_IMG el_type='3' src='test' width='375' height='50'></HX_IMG>对需求的描述方式都是不同的。仅仅是通过别人对需求的描述实际上很\
 ";
 - (void)viewDidLoad {
     
@@ -63,8 +63,8 @@ static NSString *richString = @"不同领域、不同层次的人，<HX_LINK el_
     _richTextView.didClickKeywordBlock = ^(KeyWordModel *keyword) {
         NSLog(@"-----> %ld-,%@",keyword.kid,keyword.standardString);
     };
-}
 
+}
 
 -(void)export{
     
