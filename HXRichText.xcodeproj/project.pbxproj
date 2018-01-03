@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		49C9AD7FD9C38BE82ED45F5B /* Pods_HXRichText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DB17DF4C6D78FA8D7431F13 /* Pods_HXRichText.framework */; };
+		E97C10461FFCB5E30061246D /* animation.gif in Resources */ = {isa = PBXBuildFile; fileRef = E97C10451FFCB5E30061246D /* animation.gif */; };
 		E97DB2311FBC4B3900CB05EE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E97DB2301FBC4B3900CB05EE /* AppDelegate.m */; };
 		E97DB2341FBC4B3900CB05EE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E97DB2331FBC4B3900CB05EE /* ViewController.m */; };
 		E97DB2371FBC4B3900CB05EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E97DB2351FBC4B3900CB05EE /* Main.storyboard */; };
@@ -30,6 +31,7 @@
 		6D5584AF90D5C71DF96645CA /* Pods-HXRichText.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HXRichText.release.xcconfig"; path = "Pods/Target Support Files/Pods-HXRichText/Pods-HXRichText.release.xcconfig"; sourceTree = "<group>"; };
 		6DB17DF4C6D78FA8D7431F13 /* Pods_HXRichText.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HXRichText.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E858466812763BACDB4479FD /* Pods-HXRichText.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HXRichText.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HXRichText/Pods-HXRichText.debug.xcconfig"; sourceTree = "<group>"; };
+		E97C10451FFCB5E30061246D /* animation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = animation.gif; sourceTree = "<group>"; };
 		E97DB22C1FBC4B3900CB05EE /* HXRichText.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HXRichText.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E97DB22F1FBC4B3900CB05EE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E97DB2301FBC4B3900CB05EE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				E97DB2381FBC4B3900CB05EE /* Assets.xcassets */,
 				E97DB23A1FBC4B3900CB05EE /* LaunchScreen.storyboard */,
 				E9FC270C1FEA3D26001C0F81 /* demo.gif */,
+				E97C10451FFCB5E30061246D /* animation.gif */,
 				E97DB23D1FBC4B3900CB05EE /* Info.plist */,
 				E97DB23E1FBC4B3900CB05EE /* main.m */,
 			);
@@ -243,6 +246,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9ED6B1C1FC7BE1A00CE9988 /* RichToolView.xib in Resources */,
+				E97C10461FFCB5E30061246D /* animation.gif in Resources */,
 				E97DB23C1FBC4B3900CB05EE /* LaunchScreen.storyboard in Resources */,
 				E97DB2391FBC4B3900CB05EE /* Assets.xcassets in Resources */,
 				E9FC270D1FEA3D26001C0F81 /* demo.gif in Resources */,

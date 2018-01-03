@@ -109,7 +109,7 @@
     [_keyWords addObject:keyword];
     
     // 7、 更新
-    _latestString = self.textView.textStorage;
+    _latestString = self.textView.attributedText;
     
     // 8、更新光标位置
     self.textView.selectedRange = NSMakeRange(keyword.tempRange.location+keyword.tempRange.length, 0);//NSMakeRange((range.location + (keyword.content.length<=0?(1+2):keyword.content.length + 2)), 0);
@@ -169,16 +169,16 @@
         UITextPosition *position = [ self.textView positionFromPosition:selectedRange.start offset:0];
         // 没有高亮选择的字，则对已输入的文字进行字数统计和限制
         if (!position) {            
-           [self updateKeyRangsWithOffSet:self.textView.text.length - _latestString.length textDidChange:YES];
-            _latestString = self.textView.textStorage;
+           [self updateKeyRangsWithOffSet:self.textView.textStorage.length - _latestString.length textDidChange:YES];
+            _latestString = self.textView.attributedText;
         }else{
             
         }
     }else{
         
         // 英文输入法下
-       [self updateKeyRangsWithOffSet:self.textView.text.length - _latestString.length textDidChange:YES];
-        _latestString = self.textView.textStorage;
+       [self updateKeyRangsWithOffSet:self.textView.textStorage.length - _latestString.length textDidChange:YES];
+        _latestString = self.textView.attributedText;
     }
     self.textView.selectedRange = _selectedRange;
     [self.textView scrollRangeToVisible:self.textView.selectedRange];
