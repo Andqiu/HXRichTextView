@@ -47,7 +47,7 @@
 }
 #pragma mark - public
 -(NSAttributedString *)renderRichText:(NSString *)text{
-    self.textView.textStorage.delegate = self;
+//    self.textView.textStorage.delegate = self;
     if (!_parser) {
         _parser = [[RichTextParser alloc]init];
     }
@@ -198,9 +198,11 @@
             
             if (rang.location >= (_replaceRange.location + _replaceRange.length)) {
                 // 删除位置的右边区域关键字
-                rang.location = rang.location + offset;
+                rang.location = rang.location + _replaceRange.length;
                 model.tempRange = rang;
                 NSLog(@"right ****** %@",[NSValue valueWithRange:model.tempRange]);
+                NSAttributedString *s = [self.textView.textStorage attributedSubstringFromRange:model.tempRange];
+                NSLog(@"222: %@",s);
             }else if((rang.location + rang.length) <= _replaceRange.location){
                 // 删除位置的左边区域关键字
                 NSLog(@"left -----> %@",[NSValue valueWithRange:model.tempRange]);
@@ -264,13 +266,4 @@
     }
 
 }
-
-- (void)textStorage:(NSTextStorage *)textStorage willProcessEditing:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta{
-    NSLog(@"---%@,InLength: %ld",[NSValue valueWithRange:editedRange],(long)delta);
-}
-
-- (void)textStorage:(NSTextStorage *)textStorage didProcessEditing:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta{
-    NSLog(@"---%@,delta: %d",[NSValue valueWithRange:editedRange],delta);
-}
-
 @end

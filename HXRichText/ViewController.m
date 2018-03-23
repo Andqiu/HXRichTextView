@@ -23,7 +23,7 @@
 
 }
 ///< el_type='3' src='test' width='375' height='50'></HX_IMG>
-static NSString *richString = @"不同领域、<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK><HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK><HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK><HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK><HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK><HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK>不同层次的人，<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK>对需求的描述方式<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK>都是不同的。仅仅是通过别人对需求的描述实际上很\
+static NSString *richString = @"不同领域<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK>对需求的描述方式<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK>都\
 ";
 - (void)viewDidLoad {
     

@@ -64,12 +64,12 @@
 #pragma mark - delegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     [_textManger setReplaceString:text replaceRange:range];
+    [_textManger update];
     return YES;
 }
 
 
 - (void)textViewDidChange:(UITextView *)textView{
-    [_textManger update];
 }
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction{
