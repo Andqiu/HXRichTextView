@@ -11,6 +11,11 @@
 #define IMG_TAG @"HX_IMG"
 #define RICH_SCHEME @"hx_rich_scheme"
 
+//LINK_TAG标签占位符
+#define Link_c @" "
+//IMG_TAG标签占位符
+#define Img_c @"\n"
+
 // 标签属性
 #define PROP_WIDTH @"width"   // 图片宽度
 #define PROP_HEIGHT @"height"   // 图片高度
@@ -49,7 +54,7 @@ typedef  NS_ENUM(NSInteger,KeywordType){
 @property(nonatomic,strong)NSDictionary *props;
 
 /**
- 标签内容
+ 标签内容（实际显示的内容）
  */
 @property(nonatomic)NSString * content;
 

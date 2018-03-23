@@ -9,7 +9,8 @@
 #import "HXRichTextManager.h"
 #import "RichTextStyle.h"
 #import "SDWebImageDownloader.h"
-
+@interface HXRichTextManager()<NSTextStorageDelegate>
+@end
 @implementation HXRichTextManager{
     
     //    无效的关键字（被编辑过）
@@ -46,6 +47,7 @@
 }
 #pragma mark - public
 -(NSAttributedString *)renderRichText:(NSString *)text{
+    self.textView.textStorage.delegate = self;
     if (!_parser) {
         _parser = [[RichTextParser alloc]init];
     }
@@ -94,10 +96,15 @@
     NSRange range = self.textView.selectedRange;
     
     // 2、更新插入位置
-    [self setReplaceString:(keyword_type != KeywordTypeImage)?keyword.content:@"" replaceRange:range];
+    NSString *content = @"";
+    if (keyword_type != KeywordTypeImage) {
+        // 将空白符插入
+        content = [NSString stringWithFormat:@"%@%@",keyword.content,Link_c];
+    }
+    [self setReplaceString:content replaceRange:range];
     
     // 3、更新已经存在的关键字位置 并修改插入部分的样式
-    [self updateKeyRangsWithOffSet:(keyword_type != KeywordTypeImage)?(keyword.content.length+1):2 textDidChange:NO];
+    [self updateKeyRangsWithOffSet:(keyword_type != KeywordTypeImage)?content.length:2 textDidChange:NO];
     
     // 4、获取渲染关键字富文本
     NSAttributedString *keyword_ast = [self insertKeyWord:keyword atRange:range];
@@ -153,31 +160,25 @@
     _replaceRange = range;
 }
 -(void)update{
+
    NSRange _selectedRange = self.textView.selectedRange;
     bool isChinese;//判断当前输入法是否是中文
-    
     if ([[[self.textView textInputMode] primaryLanguage]  isEqualToString: @"en-US"]) {
-        isChinese = false;
+        isChinese = NO;
     }
     else
     {
-        isChinese = true;
+        isChinese = YES;
     }
+    //获取高亮部分
+    UITextPosition *position = nil;
     if (isChinese) { //中文输入法下
         UITextRange *selectedRange = [ self.textView markedTextRange];
         //获取高亮部分
-        UITextPosition *position = [ self.textView positionFromPosition:selectedRange.start offset:0];
-        // 没有高亮选择的字，则对已输入的文字进行字数统计和限制
-        if (!position) {            
-           [self updateKeyRangsWithOffSet:self.textView.textStorage.length - _latestString.length textDidChange:YES];
-            _latestString = self.textView.attributedText;
-        }else{
-            
-        }
-    }else{
-        
-        // 英文输入法下
-       [self updateKeyRangsWithOffSet:self.textView.textStorage.length - _latestString.length textDidChange:YES];
+        position = [ self.textView positionFromPosition:selectedRange.start offset:0];
+    }
+    if (!position) {
+        [self updateKeyRangsWithOffSet:self.textView.textStorage.length - _latestString.length textDidChange:YES];
         _latestString = self.textView.attributedText;
     }
     self.textView.selectedRange = _selectedRange;
@@ -194,26 +195,36 @@
         for (int i =0;i<_keyWords.count;i++) {
             KeyWordModel * model = _keyWords[i];
             NSRange rang = model.tempRange;
-            if (rang.location >= (_replaceRange.location - offset)) {
-                // 插入位置的右边区域关键字
+            
+            if (rang.location >= (_replaceRange.location + _replaceRange.length)) {
+                // 删除位置的右边区域关键字
                 rang.location = rang.location + offset;
                 model.tempRange = rang;
                 NSLog(@"right ****** %@",[NSValue valueWithRange:model.tempRange]);
             }else if((rang.location + rang.length) <= _replaceRange.location){
-                // 插入位置的左边区域关键字
+                // 删除位置的左边区域关键字
                 NSLog(@"left -----> %@",[NSValue valueWithRange:model.tempRange]);
             }else{
-                
-                // 插入位置的在关键字上
-                model.tempRange = NSMakeRange(0, 0);
-                if (didChange) {
-                    editRange = NSMakeRange(rang.location, rang.length+offset);
-                }else{
-                    editRange = rang;
+                NSLog(@"c -----> %lu",(unsigned long)self.textView.textStorage.length);
+                // 删除区域与关键字区域有交集
+                [self.textView.textStorage addAttributes:[RichTextStyle getNormalTextAttributed] range:model.tempRange];
+                if ([model.props[PROP_EL_TYPE] integerValue] != 3) {
+                    [self.textView.textStorage removeAttribute:NSLinkAttributeName range:model.tempRange];
                 }
-                editKeyword = model;
+                [_invalidKeywords addObject:model];
+
             }
+        
         }
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [_invalidKeywords enumerateObjectsUsingBlock:^(KeyWordModel * obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                obj.tempRange = NSMakeRange(0, 0);
+                [_keyWords removeObject:obj];
+            }];
+            
+        });
+        
     }else{
         NSLog(@"添加操作");
 
@@ -239,18 +250,27 @@
                 editKeyword = model;
             }
         }
-    }
-
-    if (editKeyword) {
-        [_invalidKeywords addObject:editKeyword];
-        [_keyWords removeObject:editKeyword];
         
-        // 更新已编辑的关键字样式
-        [self.textView.textStorage addAttributes:[RichTextStyle getNormalTextAttributed] range:editRange];
-        if ([editKeyword.props[PROP_EL_TYPE] integerValue] != 3) {
-            [self.textView.textStorage removeAttribute:NSLinkAttributeName range:editRange];
+        if (editKeyword) {
+            [_invalidKeywords addObject:editKeyword];
+            [_keyWords removeObject:editKeyword];
+            
+            // 更新已编辑的关键字样式
+            [self.textView.textStorage addAttributes:[RichTextStyle getNormalTextAttributed] range:editRange];
+            if ([editKeyword.props[PROP_EL_TYPE] integerValue] != 3) {
+                [self.textView.textStorage removeAttribute:NSLinkAttributeName range:editRange];
+            }
         }
     }
+
+}
+
+- (void)textStorage:(NSTextStorage *)textStorage willProcessEditing:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta{
+    NSLog(@"---%@,InLength: %ld",[NSValue valueWithRange:editedRange],(long)delta);
+}
+
+- (void)textStorage:(NSTextStorage *)textStorage didProcessEditing:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta{
+    NSLog(@"---%@,delta: %d",[NSValue valueWithRange:editedRange],delta);
 }
 
 @end

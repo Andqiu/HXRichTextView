@@ -17,15 +17,12 @@
                block:(void(^)(NSString *newrichText,NSAttributedString *keywordAttributed,NSRange keywordRange))block{
     NSInteger type = [keyWord.props[PROP_EL_TYPE] integerValue];
     NSString *keywordDes =[RichTextParser keyWordDescription:keyWord];
+    
     if (type == KeywordTypeImage) {
-//        NSString *str = [richText stringByReplacingCharactersInRange:range withString:keywordDes];
-
         keyWord.standardString = keywordDes;
         NSRange range1 = NSMakeRange(range.location, 2);
         keyWord.tempRange = range1;
-        
         NSAttributedString *attributed = [self getImageAttributedStringWithKeyword:keyWord];
-        
         if (block) {
             block(nil,attributed,range1);
         }
@@ -33,8 +30,8 @@
     }else{
         NSString *content = keyWord.content;
         // 1，在原始字符串位置插入相应关键字，生成新的富文本
-//        NSString *str = [richText stringByReplacingCharactersInRange:range withString:keywordDes];
         keyWord.standardString = keywordDes;
+        // +1 是要在关键字后面放空白符
         NSRange range1 = NSMakeRange(range.location, content.length + 1);
         keyWord.tempRange = range1;
         
@@ -44,8 +41,7 @@
         NSURL *link = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%ld",RICH_SCHEME,keyWord.kid]];
         [attributes setObject:link forKey:NSLinkAttributeName];
         NSMutableAttributedString *attributed = [[NSMutableAttributedString alloc]initWithString:content attributes:attributes];
-        NSAttributedString *spaceString = [[NSAttributedString alloc]initWithString:@" " attributes:[RichTextStyle getNormalTextAttributed]];
-//        [attributed insertAttributedString:spaceString atIndex:0];
+        NSAttributedString *spaceString = [[NSAttributedString alloc]initWithString:Link_c attributes:[RichTextStyle getNormalTextAttributed]];
         [attributed appendAttributedString:spaceString];
         if (block) {
             block(nil,attributed,range1);
@@ -60,10 +56,11 @@
     UIImage *image = keyWord.props[PROP_IMAGE];
     CGFloat width = [keyWord.props[PROP_WIDTH] floatValue];
     CGFloat height = [keyWord.props[PROP_HEIGHT] floatValue];
+    NSLog(@"%f",_imageMaxWidth);
     NSAttributedString *imgattributed = [self getImage:image src:src width:width height:height maxWidth:_imageMaxWidth];
     NSMutableAttributedString *attributed = [[NSMutableAttributedString alloc]initWithAttributedString:imgattributed];
     [attributed addAttribute:NSLinkAttributeName value:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%ld",RICH_SCHEME,keyWord.kid]] range:NSMakeRange(0, attributed.length)];
-    NSAttributedString *spaceString = [[NSAttributedString alloc]initWithString:@" " attributes:[RichTextStyle getNormalTextAttributed]];
+    NSAttributedString *spaceString = [[NSAttributedString alloc]initWithString:Img_c attributes:[RichTextStyle getNormalTextAttributed]];
     [attributed appendAttributedString:spaceString];
     return attributed;
 }

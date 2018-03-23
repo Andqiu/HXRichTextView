@@ -124,7 +124,7 @@
                                 for (NSInteger k = i + 1;k<_datas.count; k++) {
                                     KeyWordModel *o_model = _datas[k];
                                     NSRange o_range = o_model.tempRange;
-                                    o_range.location = o_range.location - model.originString.length + attributed.length + 1;
+                                    o_range.location = o_range.location - model.originString.length + attributed.length;
                                     o_model.tempRange = o_range;
                                 }
                             }];
