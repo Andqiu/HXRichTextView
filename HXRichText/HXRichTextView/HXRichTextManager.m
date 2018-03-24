@@ -104,7 +104,7 @@
     [self setReplaceString:content replaceRange:range];
     
     // 3、更新已经存在的关键字位置 并修改插入部分的样式
-    [self updateKeyRangsWithOffSet:(keyword_type != KeywordTypeImage)?content.length:2 textDidChange:NO];
+//    [self updateKeyRangsWithOffSet:(keyword_type != KeywordTypeImage)?content.length:2 textDidChange:NO];
     
     // 4、获取渲染关键字富文本
     NSAttributedString *keyword_ast = [self insertKeyWord:keyword atRange:range];
@@ -116,7 +116,7 @@
     [_keyWords addObject:keyword];
     
     // 7、 更新
-    _latestString = self.textView.attributedText;
+//    _latestString = self.textView.attributedText;
     
     // 8、更新光标位置
     self.textView.selectedRange = NSMakeRange(keyword.tempRange.location+keyword.tempRange.length, 0);//NSMakeRange((range.location + (keyword.content.length<=0?(1+2):keyword.content.length + 2)), 0);
@@ -190,7 +190,7 @@
     KeyWordModel *editKeyword = nil;
     
     if (offset < 0 ) {
-        // 删除
+        // 删除≥
         NSLog(@"删除操作");
         for (int i =0;i<_keyWords.count;i++) {
             KeyWordModel * model = _keyWords[i];
@@ -198,7 +198,7 @@
             
             if (rang.location >= (_replaceRange.location + _replaceRange.length)) {
                 // 删除位置的右边区域关键字
-                rang.location = rang.location + _replaceRange.length;
+                rang.location = rang.location + offset;
                 model.tempRange = rang;
                 NSLog(@"right ****** %@",[NSValue valueWithRange:model.tempRange]);
                 NSAttributedString *s = [self.textView.textStorage attributedSubstringFromRange:model.tempRange];
@@ -207,12 +207,31 @@
                 // 删除位置的左边区域关键字
                 NSLog(@"left -----> %@",[NSValue valueWithRange:model.tempRange]);
             }else{
-                NSLog(@"c -----> %lu",(unsigned long)self.textView.textStorage.length);
                 // 删除区域与关键字区域有交集
-                [self.textView.textStorage addAttributes:[RichTextStyle getNormalTextAttributed] range:model.tempRange];
-                if ([model.props[PROP_EL_TYPE] integerValue] != 3) {
-                    [self.textView.textStorage removeAttribute:NSLinkAttributeName range:model.tempRange];
+                
+                BOOL shouldRemoveAttr = NO;
+                if (rang.location < _replaceRange.location && (rang.location + rang.length) <= (_replaceRange.location + _replaceRange.length)) {
+                        // 左交集
+                    model.tempRange = NSMakeRange(rang.location, _replaceRange.location - rang.location);
+                    shouldRemoveAttr = true;
+                }else if(_replaceRange.location <= rang.location &&(rang.location + rang.length) >= (_replaceRange.location + _replaceRange.length)){
+                        // 右交集
+                    model.tempRange = NSMakeRange(_replaceRange.location + _replaceRange.length, (rang.location + rang.length) - (_replaceRange.location + _replaceRange.length));
+                    shouldRemoveAttr = true;
+
+                }else if(rang.location <= _replaceRange.location && (rang.location + rang.length) >= (_replaceRange.location + _replaceRange.length)){
+                    // 被关键字包含
+                    shouldRemoveAttr = true;
+                    model.tempRange = NSMakeRange(rang.location, rang.length - _replaceRange.length);
                 }
+                
+                if (shouldRemoveAttr) {
+                    [self.textView.textStorage addAttributes:[RichTextStyle getNormalTextAttributed] range:model.tempRange];
+                    if ([model.props[PROP_EL_TYPE] integerValue] != 3) {
+                        [self.textView.textStorage removeAttribute:NSLinkAttributeName range:model.tempRange];
+                    }
+                }
+                
                 [_invalidKeywords addObject:model];
 
             }

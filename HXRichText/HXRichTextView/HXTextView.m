@@ -61,15 +61,65 @@
     return self;
 }
 
+-(void)exported{
+    NSMutableAttributedString *tsg =  self.textStorage.mutableCopy;
+    [tsg enumerateAttributesInRange:NSMakeRange(0, self.textStorage.length)
+                                                  options:NSAttributedStringEnumerationReverse usingBlock:^(NSDictionary<NSAttributedStringKey,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
+                                                      
+                                                      if (attrs[NSAttachmentAttributeName]) {
+                                                         NSString *str =  [self transImgAttrs:attrs withRange:range];
+                                                          [tsg replaceCharactersInRange:range withString:str];
+                                                      }else if(attrs[NSLinkAttributeName]){
+                                                          NSString *str =  [self transLinkAttrs:attrs withRange:range];
+                                                          [tsg replaceCharactersInRange:range withString:str];
+                                                      }else{
+                                                          // 无需替换
+                                                      }
+                                                      
+                                                      
+                                                  }];
+    NSLog(@"%@",tsg.string);
+}
+
+-(NSString *)transLinkAttrs:(NSDictionary *)attrs withRange:(NSRange)range{
+    
+    KeyWordModel *keyword = [[KeyWordModel alloc]init];
+    NSString *content = [self.textStorage attributedSubstringFromRange:range].string;
+    keyword.props = @{
+                      PROP_EL_TYPE:@(KeywordTypeLink),
+                      };
+    keyword.content = content;
+    
+    NSString *str = [RichTextParser keyWordDescription:keyword];
+    return str;
+    
+}
+
+-(NSString *)transImgAttrs:(NSDictionary *)attrs withRange:(NSRange)range{
+    
+    KeyWordModel *keyword = [[KeyWordModel alloc]init];
+    NSTextAttachment *attachment = attrs[@"NSAttachment"];
+    UIImage *image = attachment.image;
+    keyword.props = @{
+                      PROP_EL_TYPE:@(KeywordTypeImage),
+                      PROP_URL:@"http://image.com",
+                      PROP_IMAGE:image
+                      };
+    
+    NSString *str = [RichTextParser keyWordDescription:keyword];
+    return str;
+    
+}
+
 #pragma mark - delegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-    [_textManger setReplaceString:text replaceRange:range];
-    [_textManger update];
+//    [_textManger setReplaceString:text replaceRange:range];
     return YES;
 }
 
 
 - (void)textViewDidChange:(UITextView *)textView{
+//    [_textManger update];
 }
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction{

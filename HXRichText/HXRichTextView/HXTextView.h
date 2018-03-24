@@ -26,5 +26,5 @@
  @param richText 富文本字符串 并渲染到textview
  */
 -(void)setRichText:(NSString *)richText;
-
+-(void)exported;
 @end

@@ -23,7 +23,7 @@
 
 }
 ///< el_type='3' src='test' width='375' height='50'></HX_IMG>
-static NSString *richString = @"不同领域<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK>对需求的描述方式<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK>都\
+static NSString *richString = @"不同领域<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK>都\
 ";
 - (void)viewDidLoad {
     
@@ -71,20 +71,22 @@ static NSString *richString = @"不同领域<HX_LINK el_type='1' src='www.baidu.
 
 -(void)export{
     
-    // 将关键字位置排序
-    [_richTextView.textManger.keyWords sortUsingComparator:^NSComparisonResult(KeyWordModel * obj1, KeyWordModel* obj2) {
-        if (obj1.tempRange.location < obj2.tempRange.location) {
-            return NSOrderedAscending;
-        }else{
-            return NSOrderedDescending;
-        }
-    }];
-    // 若关键字内有本地图片要上传，请先上传后将地址替换
-    NSString *richText = [_richTextView.textManger.parser
-                          replaceParserString:_richTextView.attributedText
-                          withKeywords:_richTextView.textManger.keyWords];
-    
-    NSLog(@"%@",richText);
+//    // 将关键字位置排序
+//    [_richTextView.textManger.keyWords sortUsingComparator:^NSComparisonResult(KeyWordModel * obj1, KeyWordModel* obj2) {
+//        if (obj1.tempRange.location < obj2.tempRange.location) {
+//            return NSOrderedAscending;
+//        }else{
+//            return NSOrderedDescending;
+//        }
+//    }];
+//    // 若关键字内有本地图片要上传，请先上传后将地址替换
+//    NSString *richText = [_richTextView.textManger.parser
+//                          replaceParserString:_richTextView.attributedText
+//                          withKeywords:_richTextView.textManger.keyWords];
+//
+//
+//    NSLog(@"%@",_richTextView.textStorage);
+    [_richTextView exported];
 }
 
 - (void)didReceiveMemoryWarning {
