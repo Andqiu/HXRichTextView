@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		49C9AD7FD9C38BE82ED45F5B /* Pods_HXRichText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DB17DF4C6D78FA8D7431F13 /* Pods_HXRichText.framework */; };
+		E959033120689510001D04AF /* ImageKeyWord.m in Sources */ = {isa = PBXBuildFile; fileRef = E959033020689510001D04AF /* ImageKeyWord.m */; };
+		E95903342068953A001D04AF /* LinkKeyWord.m in Sources */ = {isa = PBXBuildFile; fileRef = E95903332068953A001D04AF /* LinkKeyWord.m */; };
+		E95903372068E31F001D04AF /* HXTextAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = E95903362068E31F001D04AF /* HXTextAttachment.m */; };
 		E97C10461FFCB5E30061246D /* animation.gif in Resources */ = {isa = PBXBuildFile; fileRef = E97C10451FFCB5E30061246D /* animation.gif */; };
 		E97DB2311FBC4B3900CB05EE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E97DB2301FBC4B3900CB05EE /* AppDelegate.m */; };
 		E97DB2341FBC4B3900CB05EE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E97DB2331FBC4B3900CB05EE /* ViewController.m */; };
@@ -31,6 +34,12 @@
 		6D5584AF90D5C71DF96645CA /* Pods-HXRichText.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HXRichText.release.xcconfig"; path = "Pods/Target Support Files/Pods-HXRichText/Pods-HXRichText.release.xcconfig"; sourceTree = "<group>"; };
 		6DB17DF4C6D78FA8D7431F13 /* Pods_HXRichText.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HXRichText.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E858466812763BACDB4479FD /* Pods-HXRichText.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HXRichText.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HXRichText/Pods-HXRichText.debug.xcconfig"; sourceTree = "<group>"; };
+		E959032F20689510001D04AF /* ImageKeyWord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageKeyWord.h; sourceTree = "<group>"; };
+		E959033020689510001D04AF /* ImageKeyWord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageKeyWord.m; sourceTree = "<group>"; };
+		E95903322068953A001D04AF /* LinkKeyWord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LinkKeyWord.h; sourceTree = "<group>"; };
+		E95903332068953A001D04AF /* LinkKeyWord.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LinkKeyWord.m; sourceTree = "<group>"; };
+		E95903352068E31F001D04AF /* HXTextAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXTextAttachment.h; sourceTree = "<group>"; };
+		E95903362068E31F001D04AF /* HXTextAttachment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HXTextAttachment.m; sourceTree = "<group>"; };
 		E97C10451FFCB5E30061246D /* animation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = animation.gif; sourceTree = "<group>"; };
 		E97DB22C1FBC4B3900CB05EE /* HXRichText.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HXRichText.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E97DB22F1FBC4B3900CB05EE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -180,6 +189,12 @@
 			children = (
 				E9FC26FD1FEA34C1001C0F81 /* KeyWordModel.h */,
 				E9FC26FE1FEA34C1001C0F81 /* KeyWordModel.m */,
+				E95903322068953A001D04AF /* LinkKeyWord.h */,
+				E95903332068953A001D04AF /* LinkKeyWord.m */,
+				E959032F20689510001D04AF /* ImageKeyWord.h */,
+				E959033020689510001D04AF /* ImageKeyWord.m */,
+				E95903352068E31F001D04AF /* HXTextAttachment.h */,
+				E95903362068E31F001D04AF /* HXTextAttachment.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -324,6 +339,9 @@
 				E97DB2311FBC4B3900CB05EE /* AppDelegate.m in Sources */,
 				E9ED6B1F1FC7BECC00CE9988 /* RichToolView.m in Sources */,
 				E9FC27081FEA34C1001C0F81 /* RichTextStyle.m in Sources */,
+				E959033120689510001D04AF /* ImageKeyWord.m in Sources */,
+				E95903342068953A001D04AF /* LinkKeyWord.m in Sources */,
+				E95903372068E31F001D04AF /* HXTextAttachment.m in Sources */,
 				E9FC27051FEA34C1001C0F81 /* KeyWordModel.m in Sources */,
 				E9FC27071FEA34C1001C0F81 /* RichTextEidtor.m in Sources */,
 			);

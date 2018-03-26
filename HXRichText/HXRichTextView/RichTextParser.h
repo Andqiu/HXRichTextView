@@ -7,21 +7,26 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KeyWordModel.h"
-
-@interface RichTextParser : NSObject
+#import "ImageKeyWord.h"
+#import "LinkKeyWord.h"
 
 /**
- 图片最大宽度
+ 解析原始文本，不负责编辑部分解析
  */
-@property(nonatomic,assign)CGFloat imageMaxWidth;
+@interface RichTextParser : NSObject
 
 /**
  关键字数组
  */
 @property(nonatomic,strong,readonly)NSMutableArray <KeyWordModel *>*datas;
 
-+(NSString *)keyWordDescription:(KeyWordModel *)keyword;
+
+/**
+ 获取图片附件
+
+ @return 图片附件
+ */
+-(NSArray <NSTextAttachment *>*)getTextAttachments;
 
 /**
  解析字符串

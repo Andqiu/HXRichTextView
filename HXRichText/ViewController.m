@@ -23,8 +23,13 @@
 
 }
 ///< el_type='3' src='test' width='375' height='50'></HX_IMG>
-static NSString *richString = @"不同领域<HX_LINK el_type='1' src='www.baidu.com'>@我们</HX_LINK>都\
-";
+//
+static NSString *richString = @"不同领域<HX_LINK el_type='0' >@我们</HX_LINK>\
+<HX_IMG el_type='3' width='512' height='200' maxWidth='365' url='https://upload-images.jianshu.io/upload_images/272307-8c345ded94da76c9..JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/700'></HX_IMG>\
+<HX_IMG el_type='3' width='512' height='200' maxWidth='365' url='sfas'></HX_IMG>\
+<HX_IMG el_type='3' width='512' height='200' maxWidth='365' url='sfas'></HX_IMG>\
+<HX_IMG el_type='3' width='512' height='200' maxWidth='365' url='sfas'></HX_IMG>\
+<HX_IMG el_type='3' width='512' height='200' maxWidth='365' url='https://upload-images.jianshu.io/upload_images/272307-8c345ded94da76c9..JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/700'></HX_IMG>";
 - (void)viewDidLoad {
     
     [super viewDidLoad];
@@ -32,18 +37,27 @@ static NSString *richString = @"不同领域<HX_LINK el_type='1' src='www.baidu.
     [v setClickBlock:^(NSInteger index) {
         switch (index) {
             case 0:{
-                KeyWordModel *keyword = [[KeyWordModel alloc]init];
-                keyword.kid = _richTextView.textManger.keyWords.count;
+                LinkKeyWord *keyword = [[LinkKeyWord alloc]init];
                 keyword.content = [NSString stringWithFormat:@"@用户小明"];
-                keyword.props = @{PROP_UID:@(123),PROP_EL_TYPE:@(KeywordTypeUser)};
+                keyword.el_type = KeywordTypeLink;
+                keyword.data = @{
+                                 @"abc":@(1),
+                                 @"ced":@"123",
+                                 @"bo":@(false),
+                                 };
                 [_richTextView.textManger insertKeyword:keyword];
 
             }
                 break;
             case 1:{
-                KeyWordModel *keyword = [[KeyWordModel alloc]init];
-                keyword.props = @{PROP_IMAGE:[UIImage imageNamed:@"test"],PROP_EL_TYPE:@(KeywordTypeImage),PROP_WIDTH:@(512),PROP_HEIGHT:@(200)};
-                keyword.kid = _richTextView.textManger.keyWords.count;
+                ImageKeyWord *keyword = [[ImageKeyWord alloc]init];
+                keyword.el_type = KeywordTypeImage;
+                keyword.url = @"www.baidu.com";
+                keyword.image = [UIImage imageNamed:@"test"];
+                keyword.width = 512;
+                keyword.height = 200;
+                keyword.maxWidth = _richTextView.frame.size.width - 10;
+
                 [_richTextView.textManger insertKeyword:keyword];
 
             }
@@ -64,7 +78,6 @@ static NSString *richString = @"不同领域<HX_LINK el_type='1' src='www.baidu.
     [self.view addSubview:_richTextView];
     [_richTextView setRichText:richString];
     _richTextView.didClickKeywordBlock = ^(KeyWordModel *keyword) {
-        NSLog(@"-----> %ld-,%@",keyword.kid,keyword.standardString);
     };
 
 }

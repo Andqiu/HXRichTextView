@@ -10,6 +10,7 @@
 #import "KeyBoardComponent.h"
 #import "RichToolView.h"
 #import "RichTextStyle.h"
+#import "HXRichTextManager.h"
 
 @interface HXTextView()<UITextViewDelegate,keyBoardComponentDelegate>
 @end
@@ -30,9 +31,9 @@
     if (self) {
         self.clipsToBounds = YES;
         self.delegate = self;
+        self.typingAttributes = [RichTextStyle getNormalTextAttributed];
         _textManger = [[HXRichTextManager alloc]init];
         _textManger.textView = self;
-        _textManger.imageMaxWidth = self.frame.size.width - 10;
     }
     return self;
 }
@@ -47,6 +48,7 @@
 -(void)setRichText:(NSString *)richText{
 
     self.attributedText = [_textManger renderRichText:richText];
+    [_textManger startDownloadWebImage];
     _latestString = self.text;
 }
 
@@ -83,43 +85,41 @@
 
 -(NSString *)transLinkAttrs:(NSDictionary *)attrs withRange:(NSRange)range{
     
-    KeyWordModel *keyword = [[KeyWordModel alloc]init];
+    LinkKeyWord *keyword = [[LinkKeyWord alloc]init];
     NSString *content = [self.textStorage attributedSubstringFromRange:range].string;
-    keyword.props = @{
-                      PROP_EL_TYPE:@(KeywordTypeLink),
-                      };
+    keyword.el_type = KeywordTypeLink;
     keyword.content = content;
     
-    NSString *str = [RichTextParser keyWordDescription:keyword];
+    NSURL *schemeURL = attrs[NSLinkAttributeName];
+    NSDictionary *data = [HXRichTextManager getDataFromScheme:schemeURL];
+    keyword.data = data;
+
+    NSString *str = [HXRichTextManager keyWordDescription:keyword];
     return str;
     
 }
 
 -(NSString *)transImgAttrs:(NSDictionary *)attrs withRange:(NSRange)range{
     
-    KeyWordModel *keyword = [[KeyWordModel alloc]init];
-    NSTextAttachment *attachment = attrs[@"NSAttachment"];
+    ImageKeyWord *keyword = [[ImageKeyWord alloc]init];
+    HXTextAttachment *attachment = attrs[NSAttachmentAttributeName];
     UIImage *image = attachment.image;
-    keyword.props = @{
-                      PROP_EL_TYPE:@(KeywordTypeImage),
-                      PROP_URL:@"http://image.com",
-                      PROP_IMAGE:image
-                      };
-    
-    NSString *str = [RichTextParser keyWordDescription:keyword];
+    keyword.el_type = KeywordTypeImage;
+    keyword.url = attachment.url;
+    keyword.image = image;
+    keyword.width = image.size.width;
+    keyword.height = image.size.height;
+    keyword.maxWidth = attachment.maxWidth;
+    NSString *str = [HXRichTextManager keyWordDescription:keyword];
     return str;
     
 }
 
 #pragma mark - delegate
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
-//    [_textManger setReplaceString:text replaceRange:range];
+    self.typingAttributes = [RichTextStyle getNormalTextAttributed];
     return YES;
-}
-
-
-- (void)textViewDidChange:(UITextView *)textView{
-//    [_textManger update];
+    
 }
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction{

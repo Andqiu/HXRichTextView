@@ -6,13 +6,13 @@
 //  Copyright © 2017年 hxjr. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #define LINK_TAG @"HX_LINK"
 #define IMG_TAG @"HX_IMG"
 #define RICH_SCHEME @"hx_rich_scheme"
 
 //LINK_TAG标签占位符
-#define Link_c @" "
+#define Link_c @""
 //IMG_TAG标签占位符
 #define Img_c @"\n"
 
@@ -30,8 +30,6 @@
 
 typedef  NS_ENUM(NSInteger,KeywordType){
     KeywordTypeLink = 0,
-    KeywordTypeUser = 1,
-    KeywordTypeProduct = 2,
     KeywordTypeImage = 3,
 };
 
@@ -39,24 +37,6 @@ typedef  NS_ENUM(NSInteger,KeywordType){
  关键字模型
  */
 @interface KeyWordModel : NSObject
-
-@property(nonatomic,assign)NSInteger kid;
-
-
-/**
- 临时range
- */
-@property(nonatomic,assign)NSRange tempRange;
-
-/**
- 标签属性
- */
-@property(nonatomic,strong)NSDictionary *props;
-
-/**
- 标签内容（实际显示的内容）
- */
-@property(nonatomic)NSString * content;
 
 /**
  标签字符串，可能会很多的空格符
@@ -68,5 +48,18 @@ typedef  NS_ENUM(NSInteger,KeywordType){
  标准的模板字符串
  */
 @property(nonatomic)NSString * standardString;
+
+
+/**
+ 实际数据
+ */
+@property(nonatomic,strong)NSDictionary *data;
+
+/**
+ 标签类型
+ */
+@property(nonatomic)KeywordType el_type;
+
+@property(nonatomic,strong)NSString *content;
 
 @end

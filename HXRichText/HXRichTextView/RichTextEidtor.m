@@ -9,57 +9,54 @@
 #import "RichTextEidtor.h"
 #import "RichTextStyle.h"
 #import "RichTextParser.h"
+#import "HXRichTextManager.h"
 
 @implementation RichTextEidtor
 
 -(void)insertKeyWord:(KeyWordModel *)keyWord
-             atRange:(NSRange)range
                block:(void(^)(NSString *newrichText,NSAttributedString *keywordAttributed,NSRange keywordRange))block{
-    NSInteger type = [keyWord.props[PROP_EL_TYPE] integerValue];
-    NSString *keywordDes =[RichTextParser keyWordDescription:keyWord];
+    NSInteger type = keyWord.el_type;
+    NSString *keywordDes =[HXRichTextManager keyWordDescription:keyWord];
     
     if (type == KeywordTypeImage) {
         keyWord.standardString = keywordDes;
-        NSRange range1 = NSMakeRange(range.location, 2);
-        keyWord.tempRange = range1;
+
         NSAttributedString *attributed = [self getImageAttributedStringWithKeyword:keyWord];
         if (block) {
-            block(nil,attributed,range1);
+            block(nil,attributed,NSMakeRange(0, 0));
         }
 
     }else{
         NSString *content = keyWord.content;
         // 1，在原始字符串位置插入相应关键字，生成新的富文本
         keyWord.standardString = keywordDes;
-        // +1 是要在关键字后面放空白符
-        NSRange range1 = NSMakeRange(range.location, content.length + 1);
-        keyWord.tempRange = range1;
         
         // 2，生成渲染的关键字富文本
         NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:[RichTextStyle getLinkTextAttributed]];
         
-        NSURL *link = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%ld",RICH_SCHEME,keyWord.kid]];
-        [attributes setObject:link forKey:NSLinkAttributeName];
+        NSURL *url = [HXRichTextManager getSchemeURLWithKeyWord:keyWord];
+        [attributes setObject:url forKey:NSLinkAttributeName];
+        
         NSMutableAttributedString *attributed = [[NSMutableAttributedString alloc]initWithString:content attributes:attributes];
         NSAttributedString *spaceString = [[NSAttributedString alloc]initWithString:Link_c attributes:[RichTextStyle getNormalTextAttributed]];
         [attributed appendAttributedString:spaceString];
         if (block) {
-            block(nil,attributed,range1);
+            block(nil,attributed,NSMakeRange(0, 0));
         }
         
     }
 }
 
--(NSAttributedString *)getImageAttributedStringWithKeyword:(KeyWordModel *)keyWord{
+-(NSAttributedString *)getImageAttributedStringWithKeyword:(ImageKeyWord *)keyWord{
     
-    NSString *src = keyWord.props[PROP_SRC];
-    UIImage *image = keyWord.props[PROP_IMAGE];
-    CGFloat width = [keyWord.props[PROP_WIDTH] floatValue];
-    CGFloat height = [keyWord.props[PROP_HEIGHT] floatValue];
-    NSLog(@"%f",_imageMaxWidth);
-    NSAttributedString *imgattributed = [self getImage:image src:src width:width height:height maxWidth:_imageMaxWidth];
+    NSString *src = keyWord.url;
+    UIImage *image = keyWord.image?keyWord.image:[UIImage imageNamed:@"test"];
+    CGFloat width = keyWord.width;
+    CGFloat height = keyWord.height;
+    NSAttributedString *imgattributed = [self getImage:image src:src width:width height:height maxWidth:keyWord.maxWidth];
     NSMutableAttributedString *attributed = [[NSMutableAttributedString alloc]initWithAttributedString:imgattributed];
-    [attributed addAttribute:NSLinkAttributeName value:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%ld",RICH_SCHEME,keyWord.kid]] range:NSMakeRange(0, attributed.length)];
+    NSURL *url = [HXRichTextManager getSchemeURLWithKeyWord:keyWord];
+    [attributed addAttribute:NSLinkAttributeName value:url range:NSMakeRange(0, attributed.length)];
     NSAttributedString *spaceString = [[NSAttributedString alloc]initWithString:Img_c attributes:[RichTextStyle getNormalTextAttributed]];
     [attributed appendAttributedString:spaceString];
     return attributed;
@@ -96,9 +93,10 @@
     
     UIImage *newimage = returnImage;
     
-    NSTextAttachment *attachment = [[NSTextAttachment alloc]initWithData:nil ofType:nil];
-
+    HXTextAttachment *attachment = [[HXTextAttachment alloc]initWithData:nil ofType:nil];
     attachment.image = newimage;
+    attachment.url = src;
+    attachment.maxWidth = maxWidth;
     attachment.bounds = CGRectMake(0, 0, newimage.size.width, newimage.size.height);
     NSAttributedString *textAttachmentString = [NSAttributedString attributedStringWithAttachment:attachment];
     return textAttachmentString;

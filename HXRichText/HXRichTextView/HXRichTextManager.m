@@ -51,7 +51,6 @@
     if (!_parser) {
         _parser = [[RichTextParser alloc]init];
     }
-    _parser.imageMaxWidth = _imageMaxWidth;
    __block NSAttributedString *str = nil;
     // 解析是同步的
     [_parser parserString:text block:^(NSAttributedString *result) {
@@ -61,51 +60,75 @@
     _latestString = str;
     
     for (KeyWordModel *keyword in _keyWords) {
-        NSLog(@"%@-%@",keyword.props[PROP_EL_TYPE],keyword.props[PROP_SRC]);
-        if ([keyword.props[PROP_EL_TYPE] integerValue] == 3 && [keyword.props[PROP_SRC] hasPrefix:@"http"]) {
+        if (keyword.el_type == KeywordTypeImage) {
             [_webImageKeywords addObject:keyword];
         }
     }
-    
+    return str;
+}
+
+-(void)startDownloadWebImage{
     // 下载网络图片
-    for (KeyWordModel *imageKeyword in _webImageKeywords) {
-        NSString *urlString = imageKeyword.props[PROP_SRC];
+//    NSArray *textAttchments = [_parser getTextAttachments];
+    for (int i = 0 ; i <_webImageKeywords.count; i++ ) {
+        ImageKeyWord *imageKeyword = _webImageKeywords[i];
+        
+        NSString *urlString = imageKeyword.url;
         NSURL *URL = [NSURL URLWithString:urlString];
+//        HXTextAttachment *textAttchment = textAttchments[i];
+        
         [[SDWebImageDownloader sharedDownloader]
          downloadImageWithURL:URL
          options:0
          progress:nil
          completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, BOOL finished) {
              dispatch_async(dispatch_get_main_queue(), ^{
-                [self replaceWebImage:image withKeyword:imageKeyword];
+                 NSLog(@"1-----> %@",URL);
+                 if (error) {
+                     return;
+                 }
+                 __block NSAttributedString *atrf = nil;
+                 __block NSRange rangef = NSMakeRange(0, 0);
+
+                 [self.textView.textStorage  enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(0, self.textView.textStorage.length) options:NSAttributedStringEnumerationReverse usingBlock:^(HXTextAttachment *value, NSRange range, BOOL * _Nonnull stop) {
+                     if (value) {
+                         NSLog(@"2-----> %@ -- %@",value.url,[NSValue valueWithRange:range]);
+                         if ([value.url isEqualToString:URL.absoluteString]) {
+                             value.image = image;
+                             atrf = [NSAttributedString attributedStringWithAttachment:value];
+                             rangef = range;
+                         }
+                     }
+
+                 }];
+                 [self.textView.textStorage replaceCharactersInRange:rangef withAttributedString:atrf];
              });
          }];
     }
     
-    return str;
+//    [self.textView.textStorage  enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(0, self.textView.textStorage.length) options:0 usingBlock:^(HXTextAttachment *value, NSRange range, BOOL * _Nonnull stop) {
+//        if (value) {
+//            NSLog(@"2----- %@",value);
+//        }
+//    }];
 }
 
 -(void)insertKeyword:(KeyWordModel *)keyword{
     
-    if (keyword.props[PROP_EL_TYPE] == nil) {
+    if (keyword.el_type < 0) {
         return;
     }
-    NSInteger keyword_type = [keyword.props[PROP_EL_TYPE] integerValue];
+    NSInteger keyword_type = keyword.el_type;
     
     // 1、获取插入的位置
     NSRange range = self.textView.selectedRange;
     
-    // 2、更新插入位置
     NSString *content = @"";
     if (keyword_type != KeywordTypeImage) {
         // 将空白符插入
         content = [NSString stringWithFormat:@"%@%@",keyword.content,Link_c];
     }
-    [self setReplaceString:content replaceRange:range];
-    
-    // 3、更新已经存在的关键字位置 并修改插入部分的样式
-//    [self updateKeyRangsWithOffSet:(keyword_type != KeywordTypeImage)?content.length:2 textDidChange:NO];
-    
+
     // 4、获取渲染关键字富文本
     NSAttributedString *keyword_ast = [self insertKeyWord:keyword atRange:range];
     
@@ -115,13 +138,114 @@
     // 6、将即将插入的关键放入关键字容器中
     [_keyWords addObject:keyword];
     
-    // 7、 更新
-//    _latestString = self.textView.attributedText;
-    
     // 8、更新光标位置
-    self.textView.selectedRange = NSMakeRange(keyword.tempRange.location+keyword.tempRange.length, 0);//NSMakeRange((range.location + (keyword.content.length<=0?(1+2):keyword.content.length + 2)), 0);
+    self.textView.selectedRange = NSMakeRange(range.location + ((keyword.el_type == KeywordTypeImage)?2:keyword.content.length), 0);
+    //NSMakeRange(keyword.tempRange.location+keyword.tempRange.length, 0);
+    //NSMakeRange((range.location + (keyword.content.length<=0?(1+2):keyword.content.length + 2)), 0);
     [self.textView scrollRangeToVisible:self.textView.selectedRange];
     
+}
+
++(NSURL *)getSchemeURLWithKeyWord:(KeyWordModel *)keyword{
+    NSURL *link = [NSURL URLWithString:[NSString stringWithFormat:@"%@://",RICH_SCHEME]];
+    NSURLComponents *compontents = [[NSURLComponents alloc]initWithURL:link resolvingAgainstBaseURL:YES];
+    NSMutableArray *items = [NSMutableArray array];
+    for (NSString *key in keyword.data) {
+        NSString * value = [keyword.data[key] description];
+        NSURLQueryItem *item = [[NSURLQueryItem alloc]initWithName:key value:value];
+        [items addObject:item];
+    }
+    compontents.queryItems = items;
+    return compontents.URL;
+}
+
++(NSDictionary *)getDataFromScheme:(NSURL *)schemeURL{
+    NSMutableDictionary *data = nil;
+    if (schemeURL) {
+        NSURLComponents *compontents = [[NSURLComponents alloc]initWithURL:schemeURL resolvingAgainstBaseURL:YES];
+        if (compontents.queryItems.count > 0) {
+            data = [NSMutableDictionary dictionary];
+        }
+        for (NSURLQueryItem *item in compontents.queryItems) {
+            [data setObject:item.value forKey:item.name];
+        }
+    }
+    return data;
+}
+
++(NSString *)keyWordDescription:(KeyWordModel *)keyword{
+    
+    NSString *propsDescription = @"";
+    
+    KeywordType ele_type = keyword.el_type;
+    if (ele_type == KeywordTypeImage) {
+        ImageKeyWord *imgKyw = (ImageKeyWord *)keyword;
+        NSString *propsStr = [NSString stringWithFormat:@"ele_type='%ld' url='%@' width='%.2f' height='%.2f' maxWidth='%.2f'",
+                              (long)imgKyw.el_type,
+                              imgKyw.url,
+                              imgKyw.width,
+                              imgKyw.height,
+                              imgKyw.maxWidth];
+        propsDescription = [NSString stringWithFormat:@"<%@ %@>%@</%@>",IMG_TAG,propsStr,imgKyw.content,IMG_TAG];
+    }else{
+        LinkKeyWord *linkKyw = (LinkKeyWord *)keyword;
+        NSError *error = nil;
+        NSString *dataStr = @"";
+        if (linkKyw.data) {
+            NSData *data = [NSJSONSerialization dataWithJSONObject:linkKyw.data options:NSJSONWritingSortedKeys error:&error];
+            if (!error) {
+                dataStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+            }
+        }
+        NSString *propsStr = [NSString stringWithFormat:@"ele_type='%ld' data='%@' ",
+                              (long)linkKyw.el_type,
+                              dataStr
+                              ];
+        propsDescription = [NSString stringWithFormat:@"<%@ %@>%@</%@>",LINK_TAG,propsStr,linkKyw.content,LINK_TAG];
+        
+    }
+    
+    return propsDescription;
+}
+
++(KeyWordModel *)createKeyWordWithProps:(NSDictionary *)props{
+    
+    KeywordType ele_type = [props[@"el_type"] integerValue];
+    
+    if (ele_type == KeywordTypeImage) {
+        ImageKeyWord *keyword = [[ImageKeyWord alloc]init];
+        keyword.el_type = ele_type;
+        keyword.width =  [props[@"width"] floatValue];
+        keyword.height =  [props[@"height"] floatValue];
+        keyword.maxWidth =  [props[@"maxWidth"] floatValue];
+        keyword.url =  props[@"url"];
+        
+        NSString *dataStr = props[@"data"];
+        NSError *error = nil;
+        if (dataStr) {
+            NSDictionary *data = [NSJSONSerialization JSONObjectWithData:[dataStr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&error];
+            if (!error) {
+                keyword.data = data;
+            }
+        }
+        
+        return keyword;
+        
+    }else{
+        LinkKeyWord *keyword = [[LinkKeyWord alloc]init];
+        keyword.el_type = [props[@"ele_type"] integerValue];
+        keyword.content = props[@"content"];
+        
+        NSString *dataStr = props[@"data"];
+        NSError *error = nil;
+        if (dataStr) {
+            NSDictionary *data = [NSJSONSerialization JSONObjectWithData:[dataStr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:&error];
+            if (!error) {
+                keyword.data = data;
+            }
+        }
+        return keyword;
+    }
 }
 
 #pragma mark - private
@@ -129,11 +253,9 @@
     if (!_editor) {
         _editor = [[RichTextEidtor alloc]init];
     }
-    _editor.imageMaxWidth = _imageMaxWidth;
     __block NSAttributedString *_attributed = nil;
     // 更新富文本
     [_editor insertKeyWord:keyWord
-                   atRange:range
                      block:^(NSString *newrichText, NSAttributedString *keywordAttributed,NSRange keywordRange) {
         _attributed = keywordAttributed;
     }];
@@ -143,146 +265,16 @@
 }
 
 -(void)replaceWebImage:(UIImage *)image withKeyword:(KeyWordModel *)keyword{
-    NSLog(@"图片位置%@",[NSValue valueWithRange:keyword.tempRange]);
-    RichTextEidtor *editor = [[RichTextEidtor alloc]init];
-    editor.imageMaxWidth = _imageMaxWidth;
-    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:keyword.props];
-    dic[PROP_IMAGE] = image;
-    keyword.props = dic;
-    
-    NSAttributedString *attr =  [editor getImageAttributedStringWithKeyword:keyword];
-    [self.textView.textStorage replaceCharactersInRange:keyword.tempRange withAttributedString:attr];
+//    NSLog(@"图片位置%@",[NSValue valueWithRange:keyword.tempRange]);
+//    RichTextEidtor *editor = [[RichTextEidtor alloc]init];
+//    editor.imageMaxWidth = _imageMaxWidth;
+//    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:keyword.props];
+//    dic[PROP_IMAGE] = image;
+//    keyword.props = dic;
+//    
+//    NSAttributedString *attr =  [editor getImageAttributedStringWithKeyword:keyword];
+//    [self.textView.textStorage replaceCharactersInRange:keyword.tempRange withAttributedString:attr];
 }
 
 #pragma mark - 更新关键字位置
--(void)setReplaceString:(NSString *)text replaceRange:(NSRange)range{
-    _replaceString = text;
-    _replaceRange = range;
-}
--(void)update{
-
-   NSRange _selectedRange = self.textView.selectedRange;
-    bool isChinese;//判断当前输入法是否是中文
-    if ([[[self.textView textInputMode] primaryLanguage]  isEqualToString: @"en-US"]) {
-        isChinese = NO;
-    }
-    else
-    {
-        isChinese = YES;
-    }
-    //获取高亮部分
-    UITextPosition *position = nil;
-    if (isChinese) { //中文输入法下
-        UITextRange *selectedRange = [ self.textView markedTextRange];
-        //获取高亮部分
-        position = [ self.textView positionFromPosition:selectedRange.start offset:0];
-    }
-    if (!position) {
-        [self updateKeyRangsWithOffSet:self.textView.textStorage.length - _latestString.length textDidChange:YES];
-        _latestString = self.textView.attributedText;
-    }
-    self.textView.selectedRange = _selectedRange;
-    [self.textView scrollRangeToVisible:self.textView.selectedRange];
-}
-
--(void)updateKeyRangsWithOffSet:(NSInteger)offset textDidChange:(BOOL)didChange{
-    NSRange editRange = NSMakeRange(0, 0);
-    KeyWordModel *editKeyword = nil;
-    
-    if (offset < 0 ) {
-        // 删除≥
-        NSLog(@"删除操作");
-        for (int i =0;i<_keyWords.count;i++) {
-            KeyWordModel * model = _keyWords[i];
-            NSRange rang = model.tempRange;
-            
-            if (rang.location >= (_replaceRange.location + _replaceRange.length)) {
-                // 删除位置的右边区域关键字
-                rang.location = rang.location + offset;
-                model.tempRange = rang;
-                NSLog(@"right ****** %@",[NSValue valueWithRange:model.tempRange]);
-                NSAttributedString *s = [self.textView.textStorage attributedSubstringFromRange:model.tempRange];
-                NSLog(@"222: %@",s);
-            }else if((rang.location + rang.length) <= _replaceRange.location){
-                // 删除位置的左边区域关键字
-                NSLog(@"left -----> %@",[NSValue valueWithRange:model.tempRange]);
-            }else{
-                // 删除区域与关键字区域有交集
-                
-                BOOL shouldRemoveAttr = NO;
-                if (rang.location < _replaceRange.location && (rang.location + rang.length) <= (_replaceRange.location + _replaceRange.length)) {
-                        // 左交集
-                    model.tempRange = NSMakeRange(rang.location, _replaceRange.location - rang.location);
-                    shouldRemoveAttr = true;
-                }else if(_replaceRange.location <= rang.location &&(rang.location + rang.length) >= (_replaceRange.location + _replaceRange.length)){
-                        // 右交集
-                    model.tempRange = NSMakeRange(_replaceRange.location + _replaceRange.length, (rang.location + rang.length) - (_replaceRange.location + _replaceRange.length));
-                    shouldRemoveAttr = true;
-
-                }else if(rang.location <= _replaceRange.location && (rang.location + rang.length) >= (_replaceRange.location + _replaceRange.length)){
-                    // 被关键字包含
-                    shouldRemoveAttr = true;
-                    model.tempRange = NSMakeRange(rang.location, rang.length - _replaceRange.length);
-                }
-                
-                if (shouldRemoveAttr) {
-                    [self.textView.textStorage addAttributes:[RichTextStyle getNormalTextAttributed] range:model.tempRange];
-                    if ([model.props[PROP_EL_TYPE] integerValue] != 3) {
-                        [self.textView.textStorage removeAttribute:NSLinkAttributeName range:model.tempRange];
-                    }
-                }
-                
-                [_invalidKeywords addObject:model];
-
-            }
-        
-        }
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [_invalidKeywords enumerateObjectsUsingBlock:^(KeyWordModel * obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                obj.tempRange = NSMakeRange(0, 0);
-                [_keyWords removeObject:obj];
-            }];
-            
-        });
-        
-    }else{
-        NSLog(@"添加操作");
-
-        for (int i =0;i<_keyWords.count;i++) {
-            KeyWordModel * model = _keyWords[i];
-            NSRange rang = model.tempRange;
-            if (rang.location >= _replaceRange.location) {
-                //  插入位置的右边区域关键字
-                rang.location = rang.location + offset;
-                model.tempRange = rang;
-                NSLog(@"right ****** %@",[NSValue valueWithRange:model.tempRange]);
-            }else if((rang.location + rang.length) <= _replaceRange.location ){
-                // 插入位置的左边区域关键字
-                NSLog(@"left -----> %@",[NSValue valueWithRange:model.tempRange]);
-            }else{
-                // 插入位置的在关键字上
-                model.tempRange = NSMakeRange(0, 0);
-                if (didChange) {
-                    editRange = NSMakeRange(rang.location, rang.length+offset);
-                }else{
-                    editRange = rang;
-                }
-                editKeyword = model;
-            }
-        }
-        
-        if (editKeyword) {
-            [_invalidKeywords addObject:editKeyword];
-            [_keyWords removeObject:editKeyword];
-            
-            // 更新已编辑的关键字样式
-            [self.textView.textStorage addAttributes:[RichTextStyle getNormalTextAttributed] range:editRange];
-            if ([editKeyword.props[PROP_EL_TYPE] integerValue] != 3) {
-                [self.textView.textStorage removeAttribute:NSLinkAttributeName range:editRange];
-            }
-        }
-    }
-
-}
 @end
