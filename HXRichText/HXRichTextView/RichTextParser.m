@@ -30,7 +30,7 @@
     NSMutableArray *_keywordRanges;
     
     // 图片附件
-    NSMutableArray <HXTextAttachment *>* _textAttachments;
+//    NSMutableArray <HXTextAttachment *>* _textAttachments;
   
 }
 -(instancetype)init{
@@ -38,7 +38,7 @@
     if (self) {
         _xmlParsers =[NSMutableArray array];
         _datas = [NSMutableArray array];
-        _textAttachments = [NSMutableArray array];
+//        _textAttachments = [NSMutableArray array];
         
     }
     return self;
@@ -88,11 +88,11 @@
         [eidtor insertKeyWord:model
                         block:^(NSString *newrichText, NSAttributedString *attributed,NSRange keywordRange) {
                             [str replaceCharactersInRange:range withAttributedString:attributed];
-                            if (model.el_type == KeywordTypeImage) {
-                                NSRange r_range = NSMakeRange(0, attributed.length);
-                                HXTextAttachment *tam = [attributed attribute:NSAttachmentAttributeName atIndex:0 effectiveRange:&r_range];
-                                [_textAttachments addObject:tam];
-                            }
+//                            if (model.el_type == KeywordTypeImage) {
+//                                NSRange r_range = NSMakeRange(0, attributed.length);
+//                                HXTextAttachment *tam = [attributed attribute:NSAttachmentAttributeName atIndex:0 effectiveRange:&r_range];
+//                                [_textAttachments addObject:tam];
+//                            }
                         }];
     }
     if (_resultBlock) {
@@ -100,9 +100,9 @@
     }
 }
 
--(NSArray <NSTextAttachment *>*)getTextAttachments{
-    return _textAttachments;
-}
+//-(NSArray <NSTextAttachment *>*)getTextAttachments{
+//    return _textAttachments;
+//}
 
 -(NSString *)replaceParserString:(NSAttributedString *)str withKeywords:(NSArray *)keywords{
     NSMutableAttributedString *mu_str = [[NSMutableAttributedString alloc]initWithAttributedString:str];

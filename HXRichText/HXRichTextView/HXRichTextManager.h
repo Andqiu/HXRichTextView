@@ -15,7 +15,6 @@
 @property(nonatomic,strong) RichTextParser *parser;
 @property(nonatomic,strong) RichTextEidtor *editor;
 @property(nonatomic,weak)UITextView * textView;
-@property(nonatomic,strong) NSMutableArray *keyWords;
 
 /**
  图片最大宽度

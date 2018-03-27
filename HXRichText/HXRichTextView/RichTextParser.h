@@ -26,7 +26,7 @@
 
  @return 图片附件
  */
--(NSArray <NSTextAttachment *>*)getTextAttachments;
+//-(NSArray <NSTextAttachment *>*)getTextAttachments;
 
 /**
  解析字符串

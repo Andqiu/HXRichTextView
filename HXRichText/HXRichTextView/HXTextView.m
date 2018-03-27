@@ -124,14 +124,14 @@
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction{
     if ([URL.absoluteString hasPrefix:RICH_SCHEME]) {
-        NSInteger index = [URL.lastPathComponent integerValue];
-        if (index > _textManger.keyWords.count) {
-            return NO;
-        }
-        KeyWordModel *keyword = _textManger.keyWords[index];
-        if (_didClickKeywordBlock) {
-            _didClickKeywordBlock(keyword);
-        }
+//        NSInteger index = [URL.lastPathComponent integerValue];
+//        if (index > 1) {
+//            return NO;
+//        }
+//        KeyWordModel *keyword = _textManger.keyWords[index];
+//        if (_didClickKeywordBlock) {
+//            _didClickKeywordBlock(keyword);
+//        }
     }
     
     return NO;
@@ -142,14 +142,14 @@
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange{
     if ([URL.absoluteString hasPrefix:RICH_SCHEME]) {
-        NSInteger index = [URL.lastPathComponent integerValue];
-        if (index > _textManger.keyWords.count) {
-            return NO;
-        }
-        KeyWordModel *keyword = _textManger.keyWords[index];
-        if (_didClickKeywordBlock) {
-            _didClickKeywordBlock(keyword);
-        }
+//        NSInteger index = [URL.lastPathComponent integerValue];
+//        if (index > _textManger.keyWords.count) {
+//            return NO;
+//        }
+//        KeyWordModel *keyword = _textManger.keyWords[index];
+//        if (_didClickKeywordBlock) {
+//            _didClickKeywordBlock(keyword);
+//        }
     }
     
     return NO;

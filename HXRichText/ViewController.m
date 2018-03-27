@@ -25,11 +25,12 @@
 ///< el_type='3' src='test' width='375' height='50'></HX_IMG>
 //
 static NSString *richString = @"不同领域<HX_LINK el_type='0' >@我们</HX_LINK>\
+<HX_LINK ele_type='0' data='' >我们</HX_LINK><HX_LINK ele_type='0' data='{\"abc\":\"1\",\"bo\":\"0\",\"ced\":\"123\"}' >@</HX_LINK><HX_LINK ele_type='0' data='{\"abc\":\"1\",\"bo\":\"0\",\"ced\":\"123\"}' >用户小明</HX_LINK>\
 <HX_IMG el_type='3' width='512' height='200' maxWidth='365' url='https://upload-images.jianshu.io/upload_images/272307-8c345ded94da76c9..JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/700'></HX_IMG>\
 <HX_IMG el_type='3' width='512' height='200' maxWidth='365' url='sfas'></HX_IMG>\
 <HX_IMG el_type='3' width='512' height='200' maxWidth='365' url='sfas'></HX_IMG>\
 <HX_IMG el_type='3' width='512' height='200' maxWidth='365' url='sfas'></HX_IMG>\
-<HX_IMG el_type='3' width='512' height='200' maxWidth='365' url='https://upload-images.jianshu.io/upload_images/272307-8c345ded94da76c9..JPG?imageMogr2/auto-orient/strip%7CimageView2/2/w/700'></HX_IMG>";
+<HX_IMG el_type='3' width='512' height='200' maxWidth='365' url='http://mrpeak.cn/images/hh00.jpg'></HX_IMG>";
 - (void)viewDidLoad {
     
     [super viewDidLoad];

@@ -13,6 +13,8 @@
 @end
 @implementation HXRichTextManager{
     
+    NSMutableArray *_keyWords;
+    
     //    无效的关键字（被编辑过）
     NSMutableArray *_invalidKeywords;
     
@@ -42,6 +44,8 @@
         _keyWords = [NSMutableArray array];
         _invalidKeywords = [NSMutableArray array];
         _webImageKeywords = [NSMutableArray array];
+        _editor = [[RichTextEidtor alloc]init];
+
     }
     return self;
 }
@@ -56,7 +60,7 @@
     [_parser parserString:text block:^(NSAttributedString *result) {
         str = result;
     }];
-    [_keyWords addObjectsFromArray:_parser.datas];
+    _keyWords = _parser.datas;
     _latestString = str;
     
     for (KeyWordModel *keyword in _keyWords) {
@@ -69,13 +73,11 @@
 
 -(void)startDownloadWebImage{
     // 下载网络图片
-//    NSArray *textAttchments = [_parser getTextAttachments];
     for (int i = 0 ; i <_webImageKeywords.count; i++ ) {
         ImageKeyWord *imageKeyword = _webImageKeywords[i];
         
         NSString *urlString = imageKeyword.url;
         NSURL *URL = [NSURL URLWithString:urlString];
-//        HXTextAttachment *textAttchment = textAttchments[i];
         
         [[SDWebImageDownloader sharedDownloader]
          downloadImageWithURL:URL
@@ -83,25 +85,26 @@
          progress:nil
          completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, BOOL finished) {
              dispatch_async(dispatch_get_main_queue(), ^{
-                 NSLog(@"1-----> %@",URL);
                  if (error) {
                      return;
                  }
-                 __block NSAttributedString *atrf = nil;
+                 __block NSMutableAttributedString *attributed = nil;
                  __block NSRange rangef = NSMakeRange(0, 0);
 
                  [self.textView.textStorage  enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(0, self.textView.textStorage.length) options:NSAttributedStringEnumerationReverse usingBlock:^(HXTextAttachment *value, NSRange range, BOOL * _Nonnull stop) {
                      if (value) {
-                         NSLog(@"2-----> %@ -- %@",value.url,[NSValue valueWithRange:range]);
                          if ([value.url isEqualToString:URL.absoluteString]) {
                              value.image = image;
-                             atrf = [NSAttributedString attributedStringWithAttachment:value];
+                             NSAttributedString *atrf = [NSAttributedString attributedStringWithAttachment:value];
+                             attributed = [[NSMutableAttributedString alloc]initWithAttributedString:atrf];
+                             NSURL *schemeURL = [HXRichTextManager getSchemeURLWithKeyWord:imageKeyword];
+                             [attributed addAttribute:NSLinkAttributeName value:schemeURL range:NSMakeRange(0, attributed.length)];
                              rangef = range;
                          }
                      }
 
                  }];
-                 [self.textView.textStorage replaceCharactersInRange:rangef withAttributedString:atrf];
+                 [self.textView.textStorage replaceCharactersInRange:rangef withAttributedString:attributed];
              });
          }];
     }
@@ -120,7 +123,7 @@
     }
     NSInteger keyword_type = keyword.el_type;
     
-    // 1、获取插入的位置
+    // 获取插入的位置
     NSRange range = self.textView.selectedRange;
     
     NSString *content = @"";
@@ -129,19 +132,15 @@
         content = [NSString stringWithFormat:@"%@%@",keyword.content,Link_c];
     }
 
-    // 4、获取渲染关键字富文本
+    // 获取渲染关键字富文本
     NSAttributedString *keyword_ast = [self insertKeyWord:keyword atRange:range];
     
-    // 5、将富文本插入到当前位置中
+    // 将富文本插入到当前位置中
     [self.textView.textStorage replaceCharactersInRange:range withAttributedString:keyword_ast];
     
-    // 6、将即将插入的关键放入关键字容器中
-    [_keyWords addObject:keyword];
-    
-    // 8、更新光标位置
+    // 更新光标位置
     self.textView.selectedRange = NSMakeRange(range.location + ((keyword.el_type == KeywordTypeImage)?2:keyword.content.length), 0);
-    //NSMakeRange(keyword.tempRange.location+keyword.tempRange.length, 0);
-    //NSMakeRange((range.location + (keyword.content.length<=0?(1+2):keyword.content.length + 2)), 0);
+ 
     [self.textView scrollRangeToVisible:self.textView.selectedRange];
     
 }
@@ -150,11 +149,24 @@
     NSURL *link = [NSURL URLWithString:[NSString stringWithFormat:@"%@://",RICH_SCHEME]];
     NSURLComponents *compontents = [[NSURLComponents alloc]initWithURL:link resolvingAgainstBaseURL:YES];
     NSMutableArray *items = [NSMutableArray array];
+    
+    NSString * value = [NSString stringWithFormat:@"%ld",(long)keyword.el_type];
+    NSURLQueryItem *item = [[NSURLQueryItem alloc]initWithName:@"el_type" value:value];
+    [items addObject:item];
+    
+    if (keyword.el_type == KeywordTypeImage) {
+        NSString * value = ((ImageKeyWord *)keyword).url;
+        NSURLQueryItem *item = [[NSURLQueryItem alloc]initWithName:@"url" value:value];
+        [items addObject:item];
+    }
+    
     for (NSString *key in keyword.data) {
         NSString * value = [keyword.data[key] description];
         NSURLQueryItem *item = [[NSURLQueryItem alloc]initWithName:key value:value];
         [items addObject:item];
     }
+
+    
     compontents.queryItems = items;
     return compontents.URL;
 }
@@ -250,9 +262,6 @@
 
 #pragma mark - private
 -(NSAttributedString *)insertKeyWord:(KeyWordModel *)keyWord atRange:(NSRange)range{
-    if (!_editor) {
-        _editor = [[RichTextEidtor alloc]init];
-    }
     __block NSAttributedString *_attributed = nil;
     // 更新富文本
     [_editor insertKeyWord:keyWord
